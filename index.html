@@ -44,7 +44,7 @@
             for (let i = 1; i <= FILES; i++) {
                 //console.time('Get Data ' + i);
                 const file = `db-${i}.js`;
-                const worker = new Worker(`${file}?cache=${Date.now()}`);
+                const worker = new Worker(`${file}?cache=1`);
                 worker.onmessage = function (event) {
                     addRows(event.data);
                     //console.timeEnd('Get Data ' + i);
