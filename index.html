@@ -3,11 +3,12 @@
 
 <head>
     <meta charset="UTF-8">
-    <title>Tarkov Player Database v1</title>
-    <script src="https://cdn.jsdelivr.net/npm/ag-grid-community@31.2.1/dist/ag-grid-community.min.js"></script>
+    <title>Tarkov Player Database</title>
+    <script src="https://cdn.jsdelivr.net/npm/ag-grid-community@31.3.1/dist/ag-grid-community.min.js"></script>
 
     <style>
-        html, body {
+        html,
+        body {
             width: 100%;
             height: 100%;
             margin: 0;
@@ -24,48 +25,64 @@
 <body>
     <div id="grid-container" class="ag-theme-alpine"></div>
 
-    
+    <script>
+        console.time('GET');
+        var db = [];
+    </script>
+
+    <script src="db-1.js"></script>
+    <script src="db-2.js"></script>
+    <script src="db-3.js"></script>
+    <script src="db-4.js"></script>
+    <script src="db-5.js"></script>
+    <script src="db-6.js"></script>
+    <script src="db-7.js"></script>
+    <script src="db-8.js"></script>
+    <script src="db-9.js"></script>
+    <script src="db-10.js"></script>
+    <script src="db-11.js"></script>
+    <script src="db-12.js"></script>
+    <script src="db-13.js"></script>
+    <script src="db-14.js"></script>
+    <script src="db-15.js"></script>
+    <script src="db-16.js"></script>
+    <script src="db-17.js"></script>
+    <script src="db-18.js"></script>
+    <script src="db-19.js"></script>
+    <script src="db-20.js"></script>
+    <script src="db-21.js"></script>
+    <script src="db-22.js"></script>
+    <script src="db-23.js"></script>
+    <script src="db-24.js"></script>
+    <script src="db-25.js"></script>
+    <script src="db-26.js"></script>
+    <script src="db-27.js"></script>
+    <script src="db-28.js"></script>
+    <script src="db-29.js"></script>
+    <script src="db-30.js"></script>
+    <script src="db-31.js"></script>
+    <script src="db-32.js"></script>
+
+    <script>
+        console.timeEnd('GET');
+    </script>
+
 
     <script>
 
         console.time('Total');
+        buildTable();
+        //var gridApi;
 
-        const FILES = 32;
+        var processedFile = 0;
 
-        let rows = [];
-        let gridApi;
 
-        let processedFile = 0;
-
-        // Check if web workers are supported in the browser
-        if (window.Worker) {
-            // Create a new web worker
-
-            for (let i = 1; i <= FILES; i++) {
-                //console.time('Get Data ' + i);
-                const file = `db-${i}.js`;
-                const worker = new Worker(`${file}?cache=1`);
-                worker.onmessage = function (event) {
-                    addRows(event.data);
-                    //console.timeEnd('Get Data ' + i);
-                    //renderTable(rows);
-                    processedFile++;
-                    //console.log(processedFile);
-                    if (processedFile === FILES) {
-                        buildTable();
-                    }
-                };
-                worker.postMessage('get_data');
-            }
-        } else {
-            console.error('Web workers are not supported in this browser.');
-        }
 
         function buildTable() {
             console.timeEnd('Total');
             let rowNumber = 1;
 
-            rows = rows.map(function (row) {
+            db = db.map(function (row) {
                 return {
                     "#": rowNumber++,
                     "Account": row[0],
@@ -77,9 +94,9 @@
                     "Days played": row[6],
                     "Sessions": row[7],
                     "Survived": row[8],
-                    "Runner": row[9],
+                    "Runthrough": row[9],
                     "Left": row[10],
-                    "KD": row[11],
+                    "K/D": row[11],
                     "Kills": row[12],
                     "Killed": row[13],
                     "Deaths": row[14],
@@ -87,64 +104,66 @@
                     "Perception": row[16],
                     "Strength": row[17],
                     "Endurance": row[18],
-                    "Kill 7 Achievement": row[19],
-                    "Lightkeeper Achievement": row[20],
-                    "Zryachiy Achievement": row[21]
+                    "Kill 7 Achievement": !isNaN(parseDate(row[19])) ? parseDate(row[19]) : null,
+                    "Lightkeeper Achievement": !isNaN(parseDate(row[20])) ? parseDate(row[20]) : null,
+                    "Zryachiy Achievement": !isNaN(parseDate(row[21])) ? parseDate(row[21]) : null,
                 };
             });
 
-            
 
             var gridOptions = {
                 //pagination: true,
                 //paginationPageSize: 1000,
+                suppressMenuHide: true,
+                tooltipShowDelay: 0,
                 valueCache: true,
                 valueCacheNeverExpires: true,
                 columnDefs: [
-                    { field: "#" },
-                    { field: "Account", filter: true },
-                    { field: "Name", filter: true },
-                    { field: "Type", filter: true },
-                    { field: "Banned", filter: true },
-                    { field: "Level", filter: true },
-                    { field: "Weapon", filter: true },
-                    { field: "Days played", filter: true },
-                    { field: "Sessions", filter: true },
-                    { field: "Survived", filter: true },
-                    { field: "Runner", filter: true },
-                    { field: "Left", filter: true },
-                    { field: "KD", filter: true },
-                    { field: "Kills", filter: true },
-                    { field: "Killed", filter: true },
-                    { field: "Deaths", filter: true },
-                    { field: "Attention", filter: true },
-                    { field: "Perception", filter: true },
-                    { field: "Strength", filter: true },
-                    { field: "Endurance", filter: true },
-                    { field: "Kill 7 Achievement", filter: true },
-                    { field: "Lightkeeper Achievement", filter: true },
-                    { field: "Zryachiy Achievement", filter: true },
-
+                    { field: "#", headerTooltip: "Number of row in the table" },
+                    { field: "Account", headerTooltip: "Account number in Tarkov.dev" },
+                    { field: "Name", headerTooltip: "Name of the player at 18 March of 2024" },
+                    { field: "Type", headerTooltip: "Account Type: Standard, EOD, Dev, Mod, Sherpa or Emissary" },
+                    { field: "Banned", headerTooltip: "If the player is banned = YES" },
+                    { field: "Level", headerTooltip: "Player level at 18 March of 2024" },
+                    { field: "Weapon", headerTooltip: "Most used weapon" },
+                    { field: "Days played", headerTooltip: "Days played since account creation" },
+                    { field: "Sessions", headerTooltip: "Raids played in this wipe" },
+                    { field: "Survived", headerTooltip: "Survived raids in this wipe" },
+                    { field: "Runthrough", headerTooltip: "Runthrough raids in this wipe" },
+                    { field: "Left", headerTooltip: "Disconnect/Leave raids in this wipe" },
+                    { field: "K/D", headerTooltip: "Kills/Deaths Ratio" },
+                    { field: "Kills", headerTooltip: "Enemies killed by the player" },
+                    { field: "Killed", headerTooltip: "Number of times that the player has been killed in raid" },
+                    { field: "Deaths", headerTooltip: "Number of times that the player has died in raid (falls/hunger...)" },
+                    { field: "Attention", headerTooltip: "Skill Level" },
+                    { field: "Perception", headerTooltip: "Skill Level" },
+                    { field: "Strength", headerTooltip: "Skill Level" },
+                    { field: "Endurance", headerTooltip: "Skill Level" },
+                    { field: "Kill 7 Achievement", headerTooltip: "Eliminate 7 PMC operatives in a single raid while playing as a PMC", filter: 'agDateColumnFilter', cellRenderer: formatDate },
+                    { field: "Lightkeeper Achievement", headerTooltip: "Meet Lightkeeper for the first time while playing as a PMC", filter: 'agDateColumnFilter', cellRenderer: formatDate },
+                    { field: "Zryachiy Achievement", headerTooltip: "Eliminate Zryachiy for the first time while playing as a PMC", filter: 'agDateColumnFilter', cellRenderer: formatDate },
                 ],
-                rowData: rows,
+                rowData: db,
                 defaultColDef: {
                     flex: 1,
                     minWidth: 150,
                     filter: true,
-                    sortable: true
+                    sortable: true,
+                    floatingFilter: true
                 }
             };
 
             const eGridDiv = document.querySelector('#grid-container');
-            gridApi = agGrid.createGrid(eGridDiv, gridOptions);
+            const gridApi = agGrid.createGrid(eGridDiv, gridOptions);
 
             var container = document.getElementById('grid-container');
             container.addEventListener('click', function (event) {
                 const clickedElement = event.target;
                 const focusedCell = gridApi.getFocusedCell();
+                if (!focusedCell) return;
                 const row = gridApi.getDisplayedRowAtIndex(focusedCell.rowIndex);
                 const cellValue = gridApi.getValue(focusedCell.column, row);
-                console.log(cellValue);
+                //console.log(cellValue);
                 if (focusedCell.column.instanceId === 1) {
                     //window.open('https://tarkov.dev/player/' + cellValue, '_blank');
                     window.open(cellValue, '_blank');
@@ -152,6 +171,29 @@
             });
 
 
+        }
+
+        function formatDate(data) {
+            const date = data.value;
+            if (!date) return date;
+
+            // Array of month names
+            const monthNames = ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'];
+
+            const day = String(date.getDate()).padStart(2, '0'); // Get the day of the month (with leading zero if needed)
+            const monthIndex = date.getMonth(); // Get the month index (0-based)
+            const monthName = monthNames[monthIndex]; // Get the month name from the array
+            const year = date.getFullYear(); // Get the full year
+
+            // Format the date
+            const formattedDate = `${day}/${monthName}/${year}`;
+            return formattedDate;
+        }
+
+        function parseDate(dateString) {
+            const [day, month, year] = dateString.split('/').map(Number);
+            // Months in JavaScript Date objects are 0-indexed, so we subtract 1 from the month
+            return new Date(year, month - 1, day);
         }
 
         function addRows(data) {
