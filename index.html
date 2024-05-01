@@ -1,1 +1,163 @@
-Hello World
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <title>Tarkov Player Database</title>
+    <script src="https://cdn.jsdelivr.net/npm/ag-grid-community@31.2.1/dist/ag-grid-community.min.js"></script>
+
+    <style>
+        html, body {
+            width: 100%;
+            height: 100%;
+            margin: 0;
+            padding: 0;
+        }
+
+        #grid-container {
+            width: 100%;
+            height: 100%;
+        }
+    </style>
+</head>
+
+<body>
+    <div id="grid-container" class="ag-theme-alpine"></div>
+
+    
+
+    <script>
+
+        console.time('Total');
+
+        const FILES = 32;
+
+        let rows = [];
+        let gridApi;
+
+        let processedFile = 0;
+
+        // Check if web workers are supported in the browser
+        if (window.Worker) {
+            // Create a new web worker
+
+            for (let i = 1; i <= FILES; i++) {
+                //console.time('Get Data ' + i);
+                const file = `db-${i}.js`;
+                const worker = new Worker(`${file}?cache=${Date.now()}`);
+                worker.onmessage = function (event) {
+                    addRows(event.data);
+                    //console.timeEnd('Get Data ' + i);
+                    //renderTable(rows);
+                    processedFile++;
+                    //console.log(processedFile);
+                    if (processedFile === FILES) {
+                        buildTable();
+                    }
+                };
+                worker.postMessage('get_data');
+            }
+        } else {
+            console.error('Web workers are not supported in this browser.');
+        }
+
+        function buildTable() {
+            console.timeEnd('Total');
+            let rowNumber = 1;
+
+            rows = rows.map(function (row) {
+                return {
+                    "#": rowNumber++,
+                    "Account": row[0],
+                    "Name": row[1],
+                    "Type": row[2],
+                    "Banned": row[3],
+                    "Level": row[4],
+                    "Weapon": row[5],
+                    "Days played": row[6],
+                    "Sessions": row[7],
+                    "Survived": row[8],
+                    "Runner": row[9],
+                    "Left": row[10],
+                    "KD": row[11],
+                    "Kills": row[12],
+                    "Killed": row[13],
+                    "Deaths": row[14],
+                    "Attention": row[15],
+                    "Perception": row[16],
+                    "Strength": row[17],
+                    "Endurance": row[18],
+                    "Kill 7 Achievement": row[19],
+                    "Lightkeeper Achievement": row[20],
+                    "Zryachiy Achievement": row[21]
+                };
+            });
+
+            
+
+            var gridOptions = {
+                //pagination: true,
+                //paginationPageSize: 1000,
+                valueCache: true,
+                valueCacheNeverExpires: true,
+                columnDefs: [
+                    { field: "#" },
+                    { field: "Account", filter: true },
+                    { field: "Name", filter: true },
+                    { field: "Type", filter: true },
+                    { field: "Banned", filter: true },
+                    { field: "Level", filter: true },
+                    { field: "Weapon", filter: true },
+                    { field: "Days played", filter: true },
+                    { field: "Sessions", filter: true },
+                    { field: "Survived", filter: true },
+                    { field: "Runner", filter: true },
+                    { field: "Left", filter: true },
+                    { field: "KD", filter: true },
+                    { field: "Kills", filter: true },
+                    { field: "Killed", filter: true },
+                    { field: "Deaths", filter: true },
+                    { field: "Attention", filter: true },
+                    { field: "Perception", filter: true },
+                    { field: "Strength", filter: true },
+                    { field: "Endurance", filter: true },
+                    { field: "Kill 7 Achievement", filter: true },
+                    { field: "Lightkeeper Achievement", filter: true },
+                    { field: "Zryachiy Achievement", filter: true },
+
+                ],
+                rowData: rows,
+                defaultColDef: {
+                    flex: 1,
+                    minWidth: 150,
+                    filter: true,
+                    sortable: true
+                }
+            };
+
+            const eGridDiv = document.querySelector('#grid-container');
+            gridApi = agGrid.createGrid(eGridDiv, gridOptions);
+
+            var container = document.getElementById('grid-container');
+            container.addEventListener('click', function (event) {
+                const clickedElement = event.target;
+                const focusedCell = gridApi.getFocusedCell();
+                const row = gridApi.getDisplayedRowAtIndex(focusedCell.rowIndex);
+                const cellValue = gridApi.getValue(focusedCell.column, row);
+                console.log(cellValue);
+                if (focusedCell.column.instanceId === 1) {
+                    //window.open('https://tarkov.dev/player/' + cellValue, '_blank');
+                    window.open(cellValue, '_blank');
+                }
+            });
+
+
+        }
+
+        function addRows(data) {
+            rows.push(...data);
+        }
+    </script>
+</body>
+
+</html>
