@@ -19,6 +19,46 @@
             width: 100%;
             height: 100%;
         }
+
+        .ag-header-cell-label>.ag-filter-icon,
+        .ag-header-menu-always-show {
+            display: none !important;
+        }
+
+        .ag-floating-filter {
+            padding-left: 5px;
+            padding-right: 10px;
+        }
+
+        .ag-ltr .ag-floating-filter-button {
+            margin-left: 5px;
+        }
+        /*
+        .ag-header-cell-label {
+            justify-content: center;
+        }
+        */
+
+        .ag-floating-bottom {
+            overflow-y: hidden!important;
+        }
+
+        .blue {
+            color: blue;
+            cursor: pointer;
+        }
+
+        .ag-floating-bottom span {
+            color: black!important;
+        }
+
+        .ag-horizontal-left-spacer {
+            overflow-x: hidden;
+        }
+
+        .ag-horizontal-right-spacer {
+            display: none;
+        }
     </style>
 </head>
 
@@ -76,7 +116,7 @@
 
         var processedFile = 0;
 
-
+        var gridApi;
 
         function buildTable() {
             console.timeEnd('Total');
@@ -84,8 +124,8 @@
 
             db = db.map(function (row) {
                 return {
-                    "#": rowNumber++,
-                    "Account": row[0],
+                    //"#": rowNumber++,
+                    "Account (Click to open profile)": row[0],
                     "Name": row[1],
                     "Type": row[2],
                     "Banned": row[3],
@@ -115,56 +155,98 @@
                 //pagination: true,
                 //paginationPageSize: 1000,
                 suppressMenuHide: true,
+                enableCellTextSelection: true,
                 tooltipShowDelay: 0,
                 valueCache: true,
                 valueCacheNeverExpires: true,
                 columnDefs: [
-                    { field: "#", headerTooltip: "Number of row in the table" },
-                    { field: "Account", headerTooltip: "Account number in Tarkov.dev" },
-                    { field: "Name", headerTooltip: "Name of the player at 18 March of 2024" },
+                    //{ field: "#", headerName: '123', headerTooltip: "Number of row in the table" },
+                    { field: "Account (Click to open profile)", headerTooltip: "Account number in Tarkov.dev", minWidth: 260, cellClass: 'blue', pinned: "left",lockPinned: true, },
+                    { field: "Name", headerTooltip: "Name of the player at 18 March of 2024", minWidth: 160 },
                     { field: "Type", headerTooltip: "Account Type: Standard, EOD, Dev, Mod, Sherpa or Emissary" },
-                    { field: "Banned", headerTooltip: "If the player is banned = YES" },
-                    { field: "Level", headerTooltip: "Player level at 18 March of 2024" },
-                    { field: "Weapon", headerTooltip: "Most used weapon" },
-                    { field: "Days played", headerTooltip: "Days played since account creation" },
-                    { field: "Sessions", headerTooltip: "Raids played in this wipe" },
-                    { field: "Survived", headerTooltip: "Survived raids in this wipe" },
-                    { field: "Runthrough", headerTooltip: "Runthrough raids in this wipe" },
-                    { field: "Left", headerTooltip: "Disconnect/Leave raids in this wipe" },
-                    { field: "K/D", headerTooltip: "Kills/Deaths Ratio" },
-                    { field: "Kills", headerTooltip: "Enemies killed by the player" },
-                    { field: "Killed", headerTooltip: "Number of times that the player has been killed in raid" },
-                    { field: "Deaths", headerTooltip: "Number of times that the player has died in raid (falls/hunger...)" },
-                    { field: "Attention", headerTooltip: "Skill Level" },
-                    { field: "Perception", headerTooltip: "Skill Level" },
-                    { field: "Strength", headerTooltip: "Skill Level" },
-                    { field: "Endurance", headerTooltip: "Skill Level" },
-                    { field: "Kill 7 Achievement", headerTooltip: "Eliminate 7 PMC operatives in a single raid while playing as a PMC", filter: 'agDateColumnFilter', cellRenderer: formatDate },
-                    { field: "Lightkeeper Achievement", headerTooltip: "Meet Lightkeeper for the first time while playing as a PMC", filter: 'agDateColumnFilter', cellRenderer: formatDate },
-                    { field: "Zryachiy Achievement", headerTooltip: "Eliminate Zryachiy for the first time while playing as a PMC", filter: 'agDateColumnFilter', cellRenderer: formatDate },
+                    { field: "Banned", headerTooltip: "If the player is banned = YES", minWidth: 110 },
+                    { field: "Level", headerTooltip: "Player level at 18 March of 2024", minWidth: 100 },
+                    { field: "Weapon", headerTooltip: "Most used weapon", minWidth: 125 },
+                    { field: "Days played", headerTooltip: "Days played since account creation", minWidth: 135 },
+                    { field: "Sessions", headerTooltip: "Raids played in this wipe", minWidth: 110 },
+                    { field: "Survived", headerTooltip: "Survived raids in this wipe", minWidth: 110 },
+                    { field: "Runthrough", headerTooltip: "Runthrough raids in this wipe", minWidth: 115 },
+                    { field: "Left", headerTooltip: "Disconnect/Leave raids in this wipe", minWidth: 100 },
+                    { field: "K/D", headerTooltip: "Kills/Deaths Ratio", minWidth: 90, type: 'centerAligned' },
+                    { field: "Kills", headerTooltip: "Enemies killed by the player", minWidth: 100 },
+                    { field: "Killed", headerTooltip: "Number of times that the player has been killed in raid", minWidth: 105 },
+                    { field: "Deaths", headerTooltip: "Number of times that the player has died in raid (falls/hunger...)", minWidth: 105 },
+                    { field: "Attention", headerTooltip: "Skill Level", minWidth: 125 },
+                    { field: "Perception", headerTooltip: "Skill Level", minWidth: 125 },
+                    { field: "Strength", headerTooltip: "Skill Level", minWidth: 125 },
+                    { field: "Endurance", headerTooltip: "Skill Level", minWidth: 125 },
+                    { field: "Kill 7 Achievement", headerTooltip: "Eliminate 7 PMC operatives in a single raid while playing as a PMC", filter: 'agDateColumnFilter', cellRenderer: formatDate, minWidth: 200 },
+                    { field: "Lightkeeper Achievement", headerTooltip: "Meet Lightkeeper for the first time while playing as a PMC", filter: 'agDateColumnFilter', cellRenderer: formatDate, minWidth: 200 },
+                    { field: "Zryachiy Achievement", headerTooltip: "Eliminate Zryachiy for the first time while playing as a PMC", filter: 'agDateColumnFilter', cellRenderer: formatDate, minWidth: 200 },
                 ],
                 rowData: db,
+                
+                pinnedBottomRowData: [
+                    {
+                        "Account (Click to open profile)": "TOTAL: 1808293",
+                        "Type": "Standard: 130.000",
+                        "Banned": "0.64%",
+                        //"Level": "Avg: 20",
+                        "Weapon": "MDR",
+                        //"Days Played": "Avg: 130",
+                    },
+                    {
+                        "Account (Click to open profile)": "Average",
+                        "Type": "EOD: 500.000",
+                        //"Banned": "0.64%",
+                        "Level": 30,
+                        //"Weapon": "MDR",
+                        "Days played": 130,
+                    },
+                    {
+                        "Account (Click to open profile)": "Minimum",
+                        "Type": "Sherpa/Emi: 300",
+                        //"Banned": "0.64%",
+                        "Level": 0,
+                        //"Weapon": "MDR",
+                        "Days played": 0,
+                    },
+                    {
+                        "Account (Click to open profile)": "Maximum",
+                        "Type": "Dev, Mod: 140",
+                        //"Banned": "0.64%",
+                        "Level": 71,
+                        //"Weapon": "MDR",
+                        "Days played": 400,
+                    },
+                ],
                 defaultColDef: {
                     flex: 1,
                     minWidth: 150,
                     filter: true,
                     sortable: true,
                     floatingFilter: true
-                }
+                },
+                /*
+                onFilterChanged: function () {
+                    const columnDefs = gridApi.getColumnDefs();
+                    columnDefs[0].headerName = `# (${gridApi.getDisplayedRowCount()})`; 
+                    gridApi.setGridOption("columnDefs", columnDefs);
+                }*/
             };
 
             const eGridDiv = document.querySelector('#grid-container');
-            const gridApi = agGrid.createGrid(eGridDiv, gridOptions);
+            gridApi = agGrid.createGrid(eGridDiv, gridOptions);
 
-            var container = document.getElementById('grid-container');
+            var container = document.querySelector('.ag-body');
             container.addEventListener('click', function (event) {
                 const clickedElement = event.target;
                 const focusedCell = gridApi.getFocusedCell();
                 if (!focusedCell) return;
                 const row = gridApi.getDisplayedRowAtIndex(focusedCell.rowIndex);
                 const cellValue = gridApi.getValue(focusedCell.column, row);
-                //console.log(cellValue);
-                if (focusedCell.column.instanceId === 1) {
+                console.log(row);
+                if (focusedCell.column.instanceId === 0) {
                     //window.open('https://tarkov.dev/player/' + cellValue, '_blank');
                     window.open(cellValue, '_blank');
                 }
