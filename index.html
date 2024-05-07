@@ -33,6 +33,7 @@
         .ag-ltr .ag-floating-filter-button {
             margin-left: 5px;
         }
+
         /*
         .ag-header-cell-label {
             justify-content: center;
@@ -40,7 +41,7 @@
         */
 
         .ag-floating-bottom {
-            overflow-y: hidden!important;
+            overflow-y: hidden !important;
         }
 
         .blue {
@@ -49,7 +50,7 @@
         }
 
         .ag-floating-bottom span {
-            color: black!important;
+            color: black !important;
         }
 
         .ag-horizontal-left-spacer {
@@ -59,6 +60,21 @@
         .ag-horizontal-right-spacer {
             display: none;
         }
+
+        .ag-floating-bottom {
+            border-top: 2px solid black !important;
+        }
+
+        .ag-pinned-left-header,
+        .ag-cell-last-left-pinned {
+            border-right: 2px solid black !important;
+        }
+
+
+        /*
+        .ag-theme-alpine {
+            --ag-borders-critical: solid 2px;
+        }*/
     </style>
 </head>
 
@@ -70,38 +86,7 @@
         var db = [];
     </script>
 
-    <script src="db-1.js"></script>
-    <script src="db-2.js"></script>
-    <script src="db-3.js"></script>
-    <script src="db-4.js"></script>
-    <script src="db-5.js"></script>
-    <script src="db-6.js"></script>
-    <script src="db-7.js"></script>
-    <script src="db-8.js"></script>
-    <script src="db-9.js"></script>
-    <script src="db-10.js"></script>
-    <script src="db-11.js"></script>
-    <script src="db-12.js"></script>
-    <script src="db-13.js"></script>
-    <script src="db-14.js"></script>
-    <script src="db-15.js"></script>
-    <script src="db-16.js"></script>
-    <script src="db-17.js"></script>
-    <script src="db-18.js"></script>
-    <script src="db-19.js"></script>
-    <script src="db-20.js"></script>
-    <script src="db-21.js"></script>
-    <script src="db-22.js"></script>
-    <script src="db-23.js"></script>
-    <script src="db-24.js"></script>
-    <script src="db-25.js"></script>
-    <script src="db-26.js"></script>
-    <script src="db-27.js"></script>
-    <script src="db-28.js"></script>
-    <script src="db-29.js"></script>
-    <script src="db-30.js"></script>
-    <script src="db-31.js"></script>
-    <script src="db-32.js"></script>
+
 
     <script>
         console.timeEnd('GET');
@@ -122,33 +107,6 @@
             console.timeEnd('Total');
             let rowNumber = 1;
 
-            db = db.map(function (row) {
-                return {
-                    //"#": rowNumber++,
-                    "Account (Click to open profile)": row[0],
-                    "Name": row[1],
-                    "Type": row[2],
-                    "Banned": row[3],
-                    "Level": row[4],
-                    "Weapon": row[5],
-                    "Days played": row[6],
-                    "Sessions": row[7],
-                    "Survived": row[8],
-                    "Runthrough": row[9],
-                    "Left": row[10],
-                    "K/D": row[11],
-                    "Kills": row[12],
-                    "Killed": row[13],
-                    "Deaths": row[14],
-                    "Attention": row[15],
-                    "Perception": row[16],
-                    "Strength": row[17],
-                    "Endurance": row[18],
-                    "Kill 7 Achievement": !isNaN(parseDate(row[19])) ? parseDate(row[19]) : null,
-                    "Lightkeeper Achievement": !isNaN(parseDate(row[20])) ? parseDate(row[20]) : null,
-                    "Zryachiy Achievement": !isNaN(parseDate(row[21])) ? parseDate(row[21]) : null,
-                };
-            });
 
 
             var gridOptions = {
@@ -159,9 +117,11 @@
                 tooltipShowDelay: 0,
                 valueCache: true,
                 valueCacheNeverExpires: true,
+                headerHeight: 30,
+                pivotHeaderHeight: 30,
                 columnDefs: [
                     //{ field: "#", headerName: '123', headerTooltip: "Number of row in the table" },
-                    { field: "Account (Click to open profile)", headerTooltip: "Account number in Tarkov.dev", minWidth: 260, cellClass: 'blue', pinned: "left",lockPinned: true, },
+                    { field: "Account (Click to open profile)", headerTooltip: "Account number in Tarkov.dev", minWidth: 260, cellClass: 'blue', pinned: "left", lockPinned: true, },
                     { field: "Name", headerTooltip: "Name of the player at 18 March of 2024", minWidth: 160 },
                     { field: "Type", headerTooltip: "Account Type: Standard, EOD, Dev, Mod, Sherpa or Emissary" },
                     { field: "Banned", headerTooltip: "If the player is banned = YES", minWidth: 110 },
@@ -184,9 +144,17 @@
                     { field: "Lightkeeper Achievement", headerTooltip: "Meet Lightkeeper for the first time while playing as a PMC", filter: 'agDateColumnFilter', cellRenderer: formatDate, minWidth: 200 },
                     { field: "Zryachiy Achievement", headerTooltip: "Eliminate Zryachiy for the first time while playing as a PMC", filter: 'agDateColumnFilter', cellRenderer: formatDate, minWidth: 200 },
                 ],
-                rowData: db,
-                
+                rowData: [],
+
                 pinnedBottomRowData: [
+                    {
+                        "Account (Click to open profile)": "Statistics",
+                        "Type": "Standard: 130.000",
+                        "Banned": "0.64%",
+                        //"Level": "Avg: 20",
+                        "Weapon": "MDR",
+                        //"Days Played": "Avg: 130",
+                    },
                     {
                         "Account (Click to open profile)": "TOTAL: 1808293",
                         "Type": "Standard: 130.000",
@@ -238,6 +206,8 @@
             const eGridDiv = document.querySelector('#grid-container');
             gridApi = agGrid.createGrid(eGridDiv, gridOptions);
 
+            gridApi.showLoadingOverlay();
+
             var container = document.querySelector('.ag-body');
             container.addEventListener('click', function (event) {
                 const clickedElement = event.target;
@@ -278,9 +248,107 @@
             return new Date(year, month - 1, day);
         }
 
-        function addRows(data) {
-            rows.push(...data);
-        }
+        let fileNumber = 0;
+        var loadingOverlay = document.querySelector('.ag-overlay-loading-center');
+
+
+    </script>
+
+    <script src="db-1.js"></script>
+    <script>loadingOverlay.innerHTML = `Loading data ${++fileNumber}/32`;</script>
+    <script src="db-2.js"></script>
+    <script>loadingOverlay.innerHTML = `Loading data ${++fileNumber}/32`;</script>
+    <script src="db-3.js"></script>
+    <script>loadingOverlay.innerHTML = `Loading data ${++fileNumber}/32`;</script>
+    <script src="db-4.js"></script>
+    <script>loadingOverlay.innerHTML = `Loading data ${++fileNumber}/32`;</script>
+    <script src="db-5.js"></script>
+    <script>loadingOverlay.innerHTML = `Loading data ${++fileNumber}/32`;</script>
+    <script src="db-6.js"></script>
+    <script>loadingOverlay.innerHTML = `Loading data ${++fileNumber}/32`;</script>
+    <script src="db-7.js"></script>
+    <script>loadingOverlay.innerHTML = `Loading data ${++fileNumber}/32`;</script>
+    <script src="db-8.js"></script>
+    <script>loadingOverlay.innerHTML = `Loading data ${++fileNumber}/32`;</script>
+    <script src="db-9.js"></script>
+    <script>loadingOverlay.innerHTML = `Loading data ${++fileNumber}/32`;</script>
+    <script src="db-10.js"></script>
+    <script>loadingOverlay.innerHTML = `Loading data ${++fileNumber}/32`;</script>
+    <script src="db-11.js"></script>
+    <script>loadingOverlay.innerHTML = `Loading data ${++fileNumber}/32`;</script>
+    <script src="db-12.js"></script>
+    <script>loadingOverlay.innerHTML = `Loading data ${++fileNumber}/32`;</script>
+    <script src="db-13.js"></script>
+    <script>loadingOverlay.innerHTML = `Loading data ${++fileNumber}/32`;</script>
+    <script src="db-14.js"></script>
+    <script>loadingOverlay.innerHTML = `Loading data ${++fileNumber}/32`;</script>
+    <script src="db-15.js"></script>
+    <script>loadingOverlay.innerHTML = `Loading data ${++fileNumber}/32`;</script>
+    <script src="db-16.js"></script>
+    <script>loadingOverlay.innerHTML = `Loading data ${++fileNumber}/32`;</script>
+    <script src="db-17.js"></script>
+    <script>loadingOverlay.innerHTML = `Loading data ${++fileNumber}/32`;</script>
+    <script src="db-18.js"></script>
+    <script>loadingOverlay.innerHTML = `Loading data ${++fileNumber}/32`;</script>
+    <script src="db-19.js"></script>
+    <script>loadingOverlay.innerHTML = `Loading data ${++fileNumber}/32`;</script>
+    <script src="db-20.js"></script>
+    <script>loadingOverlay.innerHTML = `Loading data ${++fileNumber}/32`;</script>
+    <script src="db-21.js"></script>
+    <script>loadingOverlay.innerHTML = `Loading data ${++fileNumber}/32`;</script>
+    <script src="db-22.js"></script>
+    <script>loadingOverlay.innerHTML = `Loading data ${++fileNumber}/32`;</script>
+    <script src="db-23.js"></script>
+    <script>loadingOverlay.innerHTML = `Loading data ${++fileNumber}/32`;</script>
+    <script src="db-24.js"></script>
+    <script>loadingOverlay.innerHTML = `Loading data ${++fileNumber}/32`;</script>
+    <script src="db-25.js"></script>
+    <script>loadingOverlay.innerHTML = `Loading data ${++fileNumber}/32`;</script>
+    <script src="db-26.js"></script>
+    <script>loadingOverlay.innerHTML = `Loading data ${++fileNumber}/32`;</script>
+    <script src="db-27.js"></script>
+    <script>loadingOverlay.innerHTML = `Loading data ${++fileNumber}/32`;</script>
+    <script src="db-28.js"></script>
+    <script>loadingOverlay.innerHTML = `Loading data ${++fileNumber}/32`;</script>
+    <script src="db-29.js"></script>
+    <script>loadingOverlay.innerHTML = `Loading data ${++fileNumber}/32`;</script>
+    <script src="db-30.js"></script>
+    <script>loadingOverlay.innerHTML = `Loading data ${++fileNumber}/32`;</script>
+    <script src="db-31.js"></script>
+    <script>loadingOverlay.innerHTML = `Loading data ${++fileNumber}/32`;</script>
+    <script src="db-32.js"></script>
+    <script>loadingOverlay.innerHTML = `Loading data completed`;</script>
+
+    <script>
+        db = db.map(function (row) {
+            return {
+                //"#": rowNumber++,
+                "Account (Click to open profile)": row[0],
+                "Name": row[1],
+                "Type": row[2],
+                "Banned": row[3],
+                "Level": row[4],
+                "Weapon": row[5],
+                "Days played": row[6],
+                "Sessions": row[7],
+                "Survived": row[8],
+                "Runthrough": row[9],
+                "Left": row[10],
+                "K/D": row[11],
+                "Kills": row[12],
+                "Killed": row[13],
+                "Deaths": row[14],
+                "Attention": row[15],
+                "Perception": row[16],
+                "Strength": row[17],
+                "Endurance": row[18],
+                "Kill 7 Achievement": !isNaN(parseDate(row[19])) ? parseDate(row[19]) : null,
+                "Lightkeeper Achievement": !isNaN(parseDate(row[20])) ? parseDate(row[20]) : null,
+                "Zryachiy Achievement": !isNaN(parseDate(row[21])) ? parseDate(row[21]) : null,
+            };
+        });
+        gridApi.setRowData(db);
+        gridApi.hideOverlay();
     </script>
 </body>
 
