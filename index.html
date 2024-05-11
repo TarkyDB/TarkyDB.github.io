@@ -127,12 +127,13 @@
                     { field: "Banned", headerTooltip: "If the player is banned = YES", minWidth: 110 },
                     { field: "Level", headerTooltip: "Player level at 18 March of 2024", minWidth: 100 },
                     { field: "Weapon", headerTooltip: "Most used weapon", minWidth: 125 },
+                    { field: "Last Access", headerTooltip: "Last time a skill gained exp", minWidth: 135, filter: 'agDateColumnFilter', cellRenderer: formatDate },
                     { field: "Days played", headerTooltip: "Days played since account creation", minWidth: 135 },
                     { field: "Sessions", headerTooltip: "Raids played in this wipe", minWidth: 110 },
                     { field: "Survived", headerTooltip: "Survived raids in this wipe", minWidth: 110 },
                     { field: "Runthrough", headerTooltip: "Runthrough raids in this wipe", minWidth: 115 },
                     { field: "Left", headerTooltip: "Disconnect/Leave raids in this wipe", minWidth: 100 },
-                    { field: "K/D", headerTooltip: "Kills/Deaths Ratio", minWidth: 90, type: 'centerAligned' },
+                    { field: "K/D", headerTooltip: "Kills/Deaths Ratio", minWidth: 90 },
                     { field: "Kills", headerTooltip: "Enemies killed by the player", minWidth: 100 },
                     { field: "Killed", headerTooltip: "Number of times that the player has been killed in raid", minWidth: 105 },
                     { field: "Deaths", headerTooltip: "Number of times that the player has died in raid (falls/hunger...)", minWidth: 105 },
@@ -215,7 +216,7 @@
                 if (!focusedCell) return;
                 const row = gridApi.getDisplayedRowAtIndex(focusedCell.rowIndex);
                 const cellValue = gridApi.getValue(focusedCell.column, row);
-                console.log(row);
+                //console.log(row);
                 if (focusedCell.column.instanceId === 0) {
                     //window.open('https://tarkov.dev/player/' + cellValue, '_blank');
                     window.open(cellValue, '_blank');
@@ -254,100 +255,106 @@
 
     </script>
 
-    <script src="db-1.js"></script>
-    <script>loadingOverlay.innerHTML = `Loading data ${++fileNumber}/32`;</script>
-    <script src="db-2.js"></script>
-    <script>loadingOverlay.innerHTML = `Loading data ${++fileNumber}/32`;</script>
-    <script src="db-3.js"></script>
-    <script>loadingOverlay.innerHTML = `Loading data ${++fileNumber}/32`;</script>
-    <script src="db-4.js"></script>
-    <script>loadingOverlay.innerHTML = `Loading data ${++fileNumber}/32`;</script>
-    <script src="db-5.js"></script>
-    <script>loadingOverlay.innerHTML = `Loading data ${++fileNumber}/32`;</script>
-    <script src="db-6.js"></script>
-    <script>loadingOverlay.innerHTML = `Loading data ${++fileNumber}/32`;</script>
-    <script src="db-7.js"></script>
-    <script>loadingOverlay.innerHTML = `Loading data ${++fileNumber}/32`;</script>
-    <script src="db-8.js"></script>
-    <script>loadingOverlay.innerHTML = `Loading data ${++fileNumber}/32`;</script>
-    <script src="db-9.js"></script>
-    <script>loadingOverlay.innerHTML = `Loading data ${++fileNumber}/32`;</script>
-    <script src="db-10.js"></script>
-    <script>loadingOverlay.innerHTML = `Loading data ${++fileNumber}/32`;</script>
-    <script src="db-11.js"></script>
-    <script>loadingOverlay.innerHTML = `Loading data ${++fileNumber}/32`;</script>
-    <script src="db-12.js"></script>
-    <script>loadingOverlay.innerHTML = `Loading data ${++fileNumber}/32`;</script>
-    <script src="db-13.js"></script>
-    <script>loadingOverlay.innerHTML = `Loading data ${++fileNumber}/32`;</script>
-    <script src="db-14.js"></script>
-    <script>loadingOverlay.innerHTML = `Loading data ${++fileNumber}/32`;</script>
-    <script src="db-15.js"></script>
-    <script>loadingOverlay.innerHTML = `Loading data ${++fileNumber}/32`;</script>
-    <script src="db-16.js"></script>
-    <script>loadingOverlay.innerHTML = `Loading data ${++fileNumber}/32`;</script>
-    <script src="db-17.js"></script>
-    <script>loadingOverlay.innerHTML = `Loading data ${++fileNumber}/32`;</script>
-    <script src="db-18.js"></script>
-    <script>loadingOverlay.innerHTML = `Loading data ${++fileNumber}/32`;</script>
-    <script src="db-19.js"></script>
-    <script>loadingOverlay.innerHTML = `Loading data ${++fileNumber}/32`;</script>
-    <script src="db-20.js"></script>
-    <script>loadingOverlay.innerHTML = `Loading data ${++fileNumber}/32`;</script>
-    <script src="db-21.js"></script>
-    <script>loadingOverlay.innerHTML = `Loading data ${++fileNumber}/32`;</script>
-    <script src="db-22.js"></script>
-    <script>loadingOverlay.innerHTML = `Loading data ${++fileNumber}/32`;</script>
-    <script src="db-23.js"></script>
-    <script>loadingOverlay.innerHTML = `Loading data ${++fileNumber}/32`;</script>
-    <script src="db-24.js"></script>
-    <script>loadingOverlay.innerHTML = `Loading data ${++fileNumber}/32`;</script>
-    <script src="db-25.js"></script>
-    <script>loadingOverlay.innerHTML = `Loading data ${++fileNumber}/32`;</script>
-    <script src="db-26.js"></script>
-    <script>loadingOverlay.innerHTML = `Loading data ${++fileNumber}/32`;</script>
-    <script src="db-27.js"></script>
-    <script>loadingOverlay.innerHTML = `Loading data ${++fileNumber}/32`;</script>
-    <script src="db-28.js"></script>
-    <script>loadingOverlay.innerHTML = `Loading data ${++fileNumber}/32`;</script>
-    <script src="db-29.js"></script>
-    <script>loadingOverlay.innerHTML = `Loading data ${++fileNumber}/32`;</script>
-    <script src="db-30.js"></script>
-    <script>loadingOverlay.innerHTML = `Loading data ${++fileNumber}/32`;</script>
-    <script src="db-31.js"></script>
-    <script>loadingOverlay.innerHTML = `Loading data ${++fileNumber}/32`;</script>
-    <script src="db-32.js"></script>
-    <script>loadingOverlay.innerHTML = `Loading data completed`;</script>
+<script src="db-1.js"></script>
+<script>loadingOverlay.innerHTML = `Loading data ${++fileNumber}/32`;</script>
+<script src="db-2.js"></script>
+<script>loadingOverlay.innerHTML = `Loading data ${++fileNumber}/32`;</script>
+<script src="db-3.js"></script>
+<script>loadingOverlay.innerHTML = `Loading data ${++fileNumber}/32`;</script>
+<script src="db-4.js"></script>
+<script>loadingOverlay.innerHTML = `Loading data ${++fileNumber}/32`;</script>
+<script src="db-5.js"></script>
+<script>loadingOverlay.innerHTML = `Loading data ${++fileNumber}/32`;</script>
+<script src="db-6.js"></script>
+<script>loadingOverlay.innerHTML = `Loading data ${++fileNumber}/32`;</script>
+<script src="db-7.js"></script>
+<script>loadingOverlay.innerHTML = `Loading data ${++fileNumber}/32`;</script>
+<script src="db-8.js"></script>
+<script>loadingOverlay.innerHTML = `Loading data ${++fileNumber}/32`;</script>
+<script src="db-9.js"></script>
+<script>loadingOverlay.innerHTML = `Loading data ${++fileNumber}/32`;</script>
+<script src="db-10.js"></script>
+<script>loadingOverlay.innerHTML = `Loading data ${++fileNumber}/32`;</script>
+<script src="db-11.js"></script>
+<script>loadingOverlay.innerHTML = `Loading data ${++fileNumber}/32`;</script>
+<script src="db-12.js"></script>
+<script>loadingOverlay.innerHTML = `Loading data ${++fileNumber}/32`;</script>
+<script src="db-13.js"></script>
+<script>loadingOverlay.innerHTML = `Loading data ${++fileNumber}/32`;</script>
+<script src="db-14.js"></script>
+<script>loadingOverlay.innerHTML = `Loading data ${++fileNumber}/32`;</script>
+<script src="db-15.js"></script>
+<script>loadingOverlay.innerHTML = `Loading data ${++fileNumber}/32`;</script>
+<script src="db-16.js"></script>
+<script>loadingOverlay.innerHTML = `Loading data ${++fileNumber}/32`;</script>
+<script src="db-17.js"></script>
+<script>loadingOverlay.innerHTML = `Loading data ${++fileNumber}/32`;</script>
+<script src="db-18.js"></script>
+<script>loadingOverlay.innerHTML = `Loading data ${++fileNumber}/32`;</script>
+<script src="db-19.js"></script>
+<script>loadingOverlay.innerHTML = `Loading data ${++fileNumber}/32`;</script>
+<script src="db-20.js"></script>
+<script>loadingOverlay.innerHTML = `Loading data ${++fileNumber}/32`;</script>
+<script src="db-21.js"></script>
+<script>loadingOverlay.innerHTML = `Loading data ${++fileNumber}/32`;</script>
+<script src="db-22.js"></script>
+<script>loadingOverlay.innerHTML = `Loading data ${++fileNumber}/32`;</script>
+<script src="db-23.js"></script>
+<script>loadingOverlay.innerHTML = `Loading data ${++fileNumber}/32`;</script>
+<script src="db-24.js"></script>
+<script>loadingOverlay.innerHTML = `Loading data ${++fileNumber}/32`;</script>
+<script src="db-25.js"></script>
+<script>loadingOverlay.innerHTML = `Loading data ${++fileNumber}/32`;</script>
+<script src="db-26.js"></script>
+<script>loadingOverlay.innerHTML = `Loading data ${++fileNumber}/32`;</script>
+<script src="db-27.js"></script>
+<script>loadingOverlay.innerHTML = `Loading data ${++fileNumber}/32`;</script>
+<script src="db-28.js"></script>
+<script>loadingOverlay.innerHTML = `Loading data ${++fileNumber}/32`;</script>
+<script src="db-29.js"></script>
+<script>loadingOverlay.innerHTML = `Loading data ${++fileNumber}/32`;</script>
+<script src="db-30.js"></script>
+<script>loadingOverlay.innerHTML = `Loading data ${++fileNumber}/32`;</script>
+<script src="db-31.js"></script>
+<script>loadingOverlay.innerHTML = `Loading data ${++fileNumber}/32`;</script>
+<script src="db-32.js"></script>
+<script>loadingOverlay.innerHTML = `Loading data completed`;</script>
 
     <script>
-        db = db.map(function (row) {
+        const rows = [];
+        for(let part of db){
+            rows.push(...part);
+        }
+        db = rows.map(function (row) {
             return {
                 //"#": rowNumber++,
                 "Account (Click to open profile)": row[0],
-                "Name": row[1],
-                "Type": row[2],
-                "Banned": row[3],
-                "Level": row[4],
-                "Weapon": row[5],
-                "Days played": row[6],
-                "Sessions": row[7],
-                "Survived": row[8],
-                "Runthrough": row[9],
-                "Left": row[10],
-                "K/D": row[11],
-                "Kills": row[12],
-                "Killed": row[13],
-                "Deaths": row[14],
-                "Attention": row[15],
-                "Perception": row[16],
-                "Strength": row[17],
-                "Endurance": row[18],
-                "Kill 7 Achievement": !isNaN(parseDate(row[19])) ? parseDate(row[19]) : null,
-                "Lightkeeper Achievement": !isNaN(parseDate(row[20])) ? parseDate(row[20]) : null,
-                "Zryachiy Achievement": !isNaN(parseDate(row[21])) ? parseDate(row[21]) : null,
+                "Name": row[1] ?? '',
+                "Type": row[2] ?? '',
+                "Banned": row[3] ?? '',
+                "Level": row[4] ?? '',
+                "Weapon": row[5] ?? '',
+                "Last Access": !isNaN(parseDate(row[6])) ? parseDate(row[6]) : null,
+                "Days played": row[7] ?? '',
+                "Sessions": row[8] ?? '',
+                "Survived": row[9] ?? '',
+                "Runthrough": row[10] ?? '',
+                "Left": row[11] ?? '',
+                "K/D": row[12] ?? '',
+                "Kills": row[13] ?? '',
+                "Killed": row[14] ?? '',
+                "Deaths": row[15] ?? '',
+                "Attention": row[16] ?? '',
+                "Perception": row[17] ?? '',
+                "Strength": row[18] ?? '',
+                "Endurance": row[19] ?? '',
+                "Kill 7 Achievement": !isNaN(parseDate(row[20])) ? parseDate(row[20]) : null,
+                "Lightkeeper Achievement": !isNaN(parseDate(row[21])) ? parseDate(row[21]) : null,
+                "Zryachiy Achievement": !isNaN(parseDate(row[22])) ? parseDate(row[22]) : null,
             };
         });
-        gridApi.setRowData(db);
+        //gridApi.setRowData(db);
+        gridApi.setGridOption('rowData', db)
         gridApi.hideOverlay();
     </script>
 </body>
