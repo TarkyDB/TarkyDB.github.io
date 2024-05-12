@@ -95,9 +95,84 @@
 
     <script>
 
+
+        /*
+                let pinnedArray = [
+                    {
+                        "Name (Click to open profile)": "Filtered Players: 1.808.088 = 100%",
+                        "Type": "Standard: 130.000",
+                        "Banned": "0.64%",
+                        "Level": "Avg: 20",
+                        "Weapon": "Most: AK74",
+                        "Last Access": "Played 1 Week: 30%",
+                        "Hours Played": "Avg: 130",
+                    },
+                    {
+                        "Name (Click to open profile)": "Accounts played this wipe: 20%",
+                        "Type": "EOD: 500.000",
+                        "Level": "Med: 20",
+                        "Weapon": "Less: MDR",
+                        "Last Access": "Played 1 Month: 30%",
+                        "Hours Played": "Med: 13",
+                    },
+                    {
+                        "Name (Click to open profile)": "Players captured: 75%",
+                        "Type": "Sherpa/Emi: 300",
+                        "Level": "Min: 10",
+                        "Last Access": "Played 2 Month: 30%",
+                        "Hours Played": "Min: 11",
+                    },
+                    {
+                        "Name (Click to open profile)": "Data from March 2024",
+                        "Type": "Dev, Mod: 140",
+                        "Level": "Max: 70",
+                        "Last Access": "Played More: 30%",
+                        "Hours Played": "Max: 70",
+                    },
+                ];
+        */
+
+        let pinnedArray = [
+            {
+                "Name (Click to open profile)": "Statistics",
+                "Type": "Account Type",
+                "Banned": "Banned",
+                "Level": "Level",
+                "Weapon": "Weapon",
+                "Last Access": "Last Access",
+                "Hours Played": "Hours Played",
+                "Sessions": "Sessions",
+                "Survived": "Survived",
+                "Runthrough": "Runthrough",
+                "Disconnects": "Disconnects",
+                "K/D": "K/D",
+                "Kills": "Kills",
+                "Killed": "Killed",
+                "Deaths": "Deaths",
+                "Attention": "Attention",
+                "Perception": "Perception",
+                "Strength": "Strength",
+                "Endurance": "Endurance",
+                "Kill 7 PMC Achievement": "Kill 7 PMC",
+                "Lightkeeper Achievement": "Lightkeeper",
+                "Zryachiy Achievement": "Zryachiy",
+            },
+            {
+                "Name (Click to open profile)": "Filtered Players:",
+            },
+            {
+                "Name (Click to open profile)": "Accounts played this wipe: 20%",
+            },
+            {
+                "Name (Click to open profile)": "Players downloaded: 75%",
+            },
+            {
+                "Name (Click to open profile)": "Data from March 2024",
+            },
+        ];
+
         console.time('Total');
         buildTable();
-        //var gridApi;
 
         var processedFile = 0;
 
@@ -106,6 +181,15 @@
 
         function cellRenderer(params) {
             return params.value;
+        }
+
+        function booleanRenderer(params) {
+            if (typeof (params.value) === 'boolean') {
+                return params.value ? 'YES' : '';
+            }
+            else {
+                return params.value;
+            }
         }
 
         function buildTable() {
@@ -127,11 +211,11 @@
                     //{ field: "#", headerName: '123', headerTooltip: "Number of row in the table" },
                     { field: "Name (Click to open profile)", headerTooltip: "Name of the player at 18 March of 2024", minWidth: 250, lockPinned: true, pinned: "left", cellClass: 'blue'/*, cellRenderer: nameRenderer*/ },
                     //{ field: "Account (Click to open profile)", headerTooltip: "Account number in Tarkov.dev", minWidth: 260, cellClass: 'blue', pinned: "left", lockPinned: true, },
-                    { field: "Type", headerTooltip: "Account Type: Standard, EOD, Dev, Mod, Sherpa or Emissary" },
-                    { field: "Banned", headerTooltip: "If the player is banned = YES", minWidth: 110 },
+                    { field: "Type", headerTooltip: "Account Type: Standard, EOD, Dev, Mod, Sherpa or Emissary", minWidth: 200 },
+                    { field: "Banned", headerTooltip: "If the player is banned = YES", minWidth: 140, cellRenderer: booleanRenderer },
                     { field: "Level", headerTooltip: "Player level at 18 March of 2024", minWidth: 100, valueFormatter: cellRenderer },
                     { field: "Weapon", headerTooltip: "Most used weapon", minWidth: 125 },
-                    { field: "Last Access", headerTooltip: "Last time a skill gained exp", minWidth: 135, filter: 'agDateColumnFilter', valueFormatter: formatDate },
+                    { field: "Last Access", headerTooltip: "Last access to a raid as PMC", minWidth: 200, filter: 'agDateColumnFilter', valueFormatter: formatDate },
                     { field: "Hours Played", headerTooltip: "Hours played since account creation", minWidth: 135, valueFormatter: cellRenderer },
                     { field: "Sessions", headerTooltip: "Raids played in this wipe", minWidth: 110, valueFormatter: cellRenderer },
                     { field: "Survived", headerTooltip: "Survived raids in this wipe", minWidth: 110, valueFormatter: cellRenderer },
@@ -145,42 +229,13 @@
                     { field: "Perception", headerTooltip: "Skill Level", minWidth: 125, valueFormatter: cellRenderer },
                     { field: "Strength", headerTooltip: "Skill Level", minWidth: 125, valueFormatter: cellRenderer },
                     { field: "Endurance", headerTooltip: "Skill Level", minWidth: 125, valueFormatter: cellRenderer },
-                    { field: "Kill 7 Achievement", headerTooltip: "Eliminate 7 PMC operatives in a single raid while playing as a PMC", filter: 'agDateColumnFilter', valueFormatter: formatDate, minWidth: 200 },
+                    { field: "Kill 7 PMC Achievement", headerTooltip: "Eliminate 7 PMC operatives in a single raid while playing as a PMC", filter: 'agDateColumnFilter', valueFormatter: formatDate, minWidth: 200 },
                     { field: "Lightkeeper Achievement", headerTooltip: "Meet Lightkeeper for the first time while playing as a PMC", filter: 'agDateColumnFilter', valueFormatter: formatDate, minWidth: 200 },
                     { field: "Zryachiy Achievement", headerTooltip: "Eliminate Zryachiy for the first time while playing as a PMC", filter: 'agDateColumnFilter', valueFormatter: formatDate, minWidth: 200 },
                 ],
                 rowData: [],
 
-                pinnedBottomRowData: [
-                    {
-                        "Name (Click to open profile)": "Filtered Players: 1.808.088 = 100%",
-                        "Type": "Standard: 130.000",
-                        "Banned": "0.64%",
-                        "Level": "Avg: 20",
-                        "Weapon": "Most: AK74",
-                        "Hours Played": "Avg: 130",
-                    },
-                    {
-                        "Name (Click to open profile)": "Accounts played this wipe: 20%",
-                        "Type": "EOD: 500.000",
-                        "Level": "Med: 20",
-                        "Weapon": "Less: MDR",
-                        "Hours Played": "Med: 13",
-                    },
-                    {
-                        "Name (Click to open profile)": "Players captured: 75%",
-                        "Type": "Sherpa/Emi: 300",
-                        "Level": "Min: 10",
-                        "Hours Played": "Min: 11",
-                    },
-                    {
-                        "Name (Click to open profile)": "Data from March 2024",
-                        "Type": "Dev, Mod: 140",
-                        "Level": "Max: 70",
-                        
-                        "Hours Played": "Max: 70",
-                    },
-                ],
+                pinnedBottomRowData: pinnedArray,
                 defaultColDef: {
                     flex: 1,
                     minWidth: 150,
@@ -188,12 +243,13 @@
                     sortable: true,
                     floatingFilter: true
                 },
-                /*
                 onFilterChanged: function () {
-                    const columnDefs = gridApi.getColumnDefs();
-                    columnDefs[0].headerName = `# (${gridApi.getDisplayedRowCount()})`; 
-                    gridApi.setGridOption("columnDefs", columnDefs);
-                }*/
+                    calculateStatistics();
+                    //console.log(rowsCount, totalPlayers);
+                    //const columnDefs = gridApi.getColumnDefs();
+                    //columnDefs[0].headerName = `# (${gridApi.getDisplayedRowCount()})`; 
+                    //gridApi.setGridOption("columnDefs", columnDefs);
+                }
             };
 
             const eGridDiv = document.querySelector('#grid-container');
@@ -237,6 +293,7 @@
         }
 
         function formatDate(data) {
+            if (typeof (data.value) === 'string') return data.value;
             const date = data.value;
             if (!date) return date;
 
@@ -361,7 +418,8 @@
                 //"Account (Click to open profile)": row[0],
                 "Name (Click to open profile)": `[${addLeadingZeros(row[0])}] ` + row[1],
                 "Type": row[2] ?? '',
-                "Banned": row[3] ?? '',
+                "Banned": row[3] ? true : false,
+                //"Banned": row[3] ? true : false,
                 "Level": row[4] ?? '',
                 "Weapon": row[5] ?? '',
                 "Last Access": !isNaN(parseDate(row[6])) ? parseDate(row[6]) : null,
@@ -369,7 +427,7 @@
                 "Sessions": row[8] ?? '',
                 "Survived": row[9] ?? '',
                 "Runthrough": row[10] ?? '',
-                "Disconnect": row[11] ?? '',
+                "Disconnects": row[11] ?? '',
                 "K/D": row[12] ?? '',
                 "Kills": row[13] ?? '',
                 "Killed": row[14] ?? '',
@@ -378,7 +436,7 @@
                 "Perception": row[17] ?? '',
                 "Strength": row[18] ?? '',
                 "Endurance": row[19] ?? '',
-                "Kill 7 Achievement": !isNaN(parseDate(row[20])) ? parseDate(row[20]) : null,
+                "Kill 7 PMC Achievement": !isNaN(parseDate(row[20])) ? parseDate(row[20]) : null,
                 "Lightkeeper Achievement": !isNaN(parseDate(row[21])) ? parseDate(row[21]) : null,
                 "Zryachiy Achievement": !isNaN(parseDate(row[22])) ? parseDate(row[22]) : null,
             };
@@ -386,6 +444,392 @@
         //gridApi.setRowData(db);
         gridApi.setGridOption('rowData', db)
         gridApi.hideOverlay();
+
+        const totalPlayers = gridApi.getDisplayedRowCount();
+
+        let firstPinnedData;
+
+        calculateStatistics();
+
+
+
+        function calculateStatistics() {
+            console.time('Statistics');
+            const filterModel = gridApi.getFilterModel();
+            // No filter applied and First Data Acquired
+            if (Object.keys(filterModel).length === 0 && firstPinnedData) {
+                // Set the cached value
+                if (firstPinnedData) {
+                    gridApi.setGridOption('pinnedBottomRowData', firstPinnedData);
+                    return;
+                }
+            }
+            // Re-calculate statistics
+            else {
+                const rowsCount = gridApi.getDisplayedRowCount();
+                let column;
+                let statistics;
+
+                // Filtered players number and percentage
+                pinnedArray[1]["Name (Click to open profile)"] = "Filtered Players: " + addDotToMiles(rowsCount) + " = " + Math.round(100 * rowsCount / totalPlayers) + "%";
+
+                // Account types
+                column = 'Type';
+                statistics = calculateAccountTypes();
+                pinnedArray[1][column] = `Standard: ${addDotToMiles(statistics['Standard'])} = ${Math.round(100 * statistics['Standard'] / rowsCount)}%`;
+                pinnedArray[2][column] = `EOD: ${addDotToMiles(statistics['EOD'])} = ${Math.round(100 * statistics['EOD'] / rowsCount)}%`;
+                pinnedArray[3][column] = `Sherpa, Emi: ${addDotToMiles(statistics['Sherpa, Emi'])}`;
+                pinnedArray[4][column] = `Dev, Mod: ${addDotToMiles(statistics['Dev, Mod'])}`;
+
+                // Banned
+                column = 'Banned';
+                statistics = calculateBanned();
+                if (statistics) {
+                    pinnedArray[1][column] = `${addDotToMiles(statistics)} = ${Math.round(100 * statistics / rowsCount)}%`;
+                }
+                else {
+                    pinnedArray[1][column] = '';
+                }
+
+
+                // Last Access
+                column = 'Last Access';
+                statistics = calculateAccess();
+                pinnedArray[1][column] = `Average: 48d`;
+                pinnedArray[2][column] = `Median: 30d`;
+                pinnedArray[3][column] = `Played 1 Week: 30%`;
+                pinnedArray[4][column] = `Played 1 Month: 30%`;
+
+                
+
+                // Weapon
+                column = 'Weapon';
+                statistics = calculateWeapon();
+                pinnedArray[1][column] = `1st: ${statistics.first}`;
+                pinnedArray[2][column] = `2nd: ${statistics.second}`;
+                pinnedArray[3][column] = `3rd: ${statistics.third}`;
+                pinnedArray[4][column] = `Less: ${statistics.less}`;
+
+                // Level
+                column = 'Level';
+                statistics = calculateMetrics(column);
+                pinnedArray[1][column] = `Avg: ${Math.round(statistics.avg)}`;
+                pinnedArray[2][column] = `Med: ${statistics.med}`;
+                pinnedArray[3][column] = `Min: ${statistics.min}`;
+                pinnedArray[4][column] = `Max: ${statistics.max}`;
+
+                // Hours Played
+                column = 'Hours Played';
+                statistics = calculateMetrics(column);
+                pinnedArray[1][column] = `Avg: ${Math.round(statistics.avg)}`;
+                pinnedArray[2][column] = `Med: ${statistics.med}`;
+                pinnedArray[3][column] = `Min: ${statistics.min}`;
+                pinnedArray[4][column] = `Max: ${addDotToMiles(statistics.max)}`;
+
+                // Sessions
+                column = 'Sessions';
+                statistics = calculateMetrics(column);
+                pinnedArray[1][column] = `Avg: ${Math.round(statistics.avg)}`;
+                pinnedArray[2][column] = `Med: ${statistics.med}`;
+                pinnedArray[3][column] = `Min: ${statistics.min}`;
+                pinnedArray[4][column] = `Max: ${addDotToMiles(statistics.max)}`;
+
+                // Survived
+                column = 'Survived';
+                statistics = calculateMetrics(column);
+                pinnedArray[1][column] = `Avg: ${Math.round(statistics.avg)}`;
+                pinnedArray[2][column] = `Med: ${statistics.med}`;
+                pinnedArray[3][column] = `Min: ${statistics.min}`;
+                pinnedArray[4][column] = `Max: ${addDotToMiles(statistics.max)}`;
+
+                // Runthrough
+                column = 'Runthrough';
+                statistics = calculateMetrics(column);
+                pinnedArray[1][column] = `Avg: ${Math.round(statistics.avg)}`;
+                pinnedArray[2][column] = `Med: ${statistics.med}`;
+                pinnedArray[3][column] = `Min: ${statistics.min}`;
+                pinnedArray[4][column] = `Max: ${addDotToMiles(statistics.max)}`;
+
+                // Disconnects
+                column = 'Disconnects';
+                statistics = calculateMetrics(column);
+                pinnedArray[1][column] = `Avg: ${Math.round(statistics.avg)}`;
+                pinnedArray[2][column] = `Med: ${statistics.med}`;
+                pinnedArray[3][column] = `Min: ${statistics.min}`;
+                pinnedArray[4][column] = `Max: ${addDotToMiles(statistics.max)}`;
+
+                // K/D
+                column = 'K/D';
+                statistics = calculateMetrics(column);
+                pinnedArray[1][column] = `Avg: ${Math.round(statistics.avg)}`;
+                pinnedArray[2][column] = `Med: ${statistics.med}`;
+                pinnedArray[3][column] = `Min: ${statistics.min}`;
+                pinnedArray[4][column] = `Max: ${statistics.max}`;
+
+                // Kills
+                column = 'Kills';
+                statistics = calculateMetrics(column);
+                pinnedArray[1][column] = `Avg: ${Math.round(statistics.avg)}`;
+                pinnedArray[2][column] = `Med: ${statistics.med}`;
+                pinnedArray[3][column] = `Min: ${statistics.min}`;
+                pinnedArray[4][column] = `Max: ${addDotToMiles(statistics.max)}`;
+
+                // Killed
+                column = 'Killed';
+                statistics = calculateMetrics(column);
+                pinnedArray[1][column] = `Avg: ${Math.round(statistics.avg)}`;
+                pinnedArray[2][column] = `Med: ${statistics.med}`;
+                pinnedArray[3][column] = `Min: ${statistics.min}`;
+                pinnedArray[4][column] = `Max: ${addDotToMiles(statistics.max)}`;
+
+                // Deaths
+                column = 'Deaths';
+                statistics = calculateMetrics(column);
+                pinnedArray[1][column] = `Avg: ${Math.round(statistics.avg)}`;
+                pinnedArray[2][column] = `Med: ${statistics.med}`;
+                pinnedArray[3][column] = `Min: ${statistics.min}`;
+                pinnedArray[4][column] = `Max: ${addDotToMiles(statistics.max)}`;
+
+                // Attention
+                column = 'Attention';
+                statistics = calculateMetrics(column);
+                pinnedArray[1][column] = `Avg: ${Math.round(statistics.avg)}`;
+                pinnedArray[2][column] = `Med: ${statistics.med}`;
+                pinnedArray[3][column] = `Min: ${statistics.min}`;
+                pinnedArray[4][column] = `Max: ${statistics.max}`;
+
+                // Perception
+                column = 'Perception';
+                statistics = calculateMetrics(column);
+                pinnedArray[1][column] = `Avg: ${Math.round(statistics.avg)}`;
+                pinnedArray[2][column] = `Med: ${statistics.med}`;
+                pinnedArray[3][column] = `Min: ${statistics.min}`;
+                pinnedArray[4][column] = `Max: ${statistics.max}`;
+
+
+                // Strength
+                column = 'Strength';
+                statistics = calculateMetrics(column);
+                pinnedArray[1][column] = `Avg: ${Math.round(statistics.avg)}`;
+                pinnedArray[2][column] = `Med: ${statistics.med}`;
+                pinnedArray[3][column] = `Min: ${statistics.min}`;
+                pinnedArray[4][column] = `Max: ${statistics.max}`;
+
+                // Endurance
+                column = 'Endurance';
+                statistics = calculateMetrics(column);
+                pinnedArray[1][column] = `Avg: ${Math.round(statistics.avg)}`;
+                pinnedArray[2][column] = `Med: ${statistics.med}`;
+                pinnedArray[3][column] = `Min: ${statistics.min}`;
+                pinnedArray[4][column] = `Max: ${statistics.max}`;
+
+                // Save first statistics to restore without re-calculation
+                if (!firstPinnedData) {
+                    firstPinnedData = JSON.parse(JSON.stringify(pinnedArray));
+                }
+            }
+
+            gridApi.setGridOption('pinnedBottomRowData', pinnedArray);
+            console.timeEnd('Statistics');
+        }
+
+        function calculateAccess() {
+            let startWipe = new Date('2023-12-27');
+            const rowsCount = gridApi.getDisplayedRowCount();
+            let daysPlayed = [];
+            let total = 0;
+            let min = Infinity;
+            let max = -Infinity;
+
+            gridApi.forEachNodeAfterFilter(node => {
+                if(!node.data['Last Access']) return;
+                const value = differenceInDays(startWipe ,node.data['Last Access']);
+                daysPlayed.push(value);
+                if(value < min) min = value;
+                if(value > max) max = value;
+                total += value;
+            });
+
+            return {
+                avg: Math.round(total / rowsCount),
+                med: calculateMedian(daysPlayed),
+                min: min,
+                max: max,
+            };
+        }
+
+        function differenceInDays(date1, date2) {
+            // Convert both dates to UTC to avoid issues with daylight saving time
+            const utcDate1 = Date.UTC(date1.getFullYear(), date1.getMonth(), date1.getDate());
+            const utcDate2 = Date.UTC(date2.getFullYear(), date2.getMonth(), date2.getDate());
+
+            // Calculate the difference in milliseconds
+            const diffInMs = Math.abs(utcDate2 - utcDate1);
+
+            // Convert milliseconds to days
+            return Math.floor(diffInMs / (1000 * 60 * 60 * 24));
+        }
+
+        function calculateWeapon() {
+            const rowsCount = gridApi.getDisplayedRowCount();
+            let weaponStats = {};
+
+            gridApi.forEachNodeAfterFilter(node => {
+
+                const value = node.data['Weapon'];
+                //console.log(value);
+                if (!weaponStats[value]) {
+                    weaponStats[value] = 1;
+                }
+                else {
+                    weaponStats[value]++;
+                }
+            });
+
+            const { topKeys, bottomKey } = findTopAndBottomKeys(weaponStats);
+
+            return {
+                first: topKeys[0],
+                second: topKeys[1],
+                third: topKeys[2],
+                less: bottomKey,
+            };
+        }
+
+        function findTopAndBottomKeys(obj) {
+            let topKeys = [];
+            let bottomKey = null;
+            let count = 0;
+
+            // Iterate through the keys of the object
+            for (const key in obj) {
+                if (key === '') continue;
+                if (obj.hasOwnProperty(key)) {
+                    if (count < 3) {
+                        topKeys.push(key);
+                    } else {
+                        // Update topKeys if current value is greater than any of the top values
+                        topKeys.sort((a, b) => obj[b] - obj[a]);
+                        if (obj[key] > obj[topKeys[topKeys.length - 1]]) {
+                            topKeys.pop();
+                            topKeys.push(key);
+                        }
+                        // Update bottomKey if current value is less than any of the bottom values
+                        if (!bottomKey || obj[key] < obj[bottomKey]) {
+                            bottomKey = key;
+                        }
+                    }
+                    count++;
+                }
+            }
+
+            return { topKeys, bottomKey };
+        }
+
+        function calculateMetrics(column) {
+            const rowsCount = gridApi.getDisplayedRowCount();
+            let med = [];
+            let min = Infinity;
+            let max = -Infinity;
+            let total = 0;
+
+            gridApi.forEachNodeAfterFilter(node => {
+                const value = node.data[column];
+                if (value < min) {
+                    min = value;
+                }
+                if (value > max) {
+                    max = value;
+                }
+                total += value;
+                med.push(value);
+            });
+
+            return {
+                avg: total / rowsCount,
+                med: calculateMedian(med),
+                min: min,
+                max: max,
+            };
+        }
+
+        function calculateMedian(numbers) {
+            // Sort the array of numbers
+            const sorted = numbers.slice().sort((a, b) => a - b);
+
+            // Get the middle index
+            const middleIndex = Math.floor(sorted.length / 2);
+
+            // Check if the array length is odd or even
+            if (sorted.length % 2 === 0) {
+                // If even, return the average of the two middle elements
+                return (sorted[middleIndex - 1] + sorted[middleIndex]) / 2;
+            } else {
+                // If odd, return the middle element
+                return sorted[middleIndex];
+            }
+        }
+
+        function calculateBanned() {
+            const rowsCount = gridApi.getDisplayedRowCount();
+            let result = 0;
+
+            gridApi.forEachNodeAfterFilter(node => {
+                if (node.data['Banned']) {
+                    result++;
+                }
+            });
+
+            return result;
+        }
+
+        function calculateAccountTypes() {
+            const rowsCount = gridApi.getDisplayedRowCount();
+            const result = {
+                "Standard": 0,
+                "EOD": 0,
+                "Sherpa": 0,
+                "Emissary": 0,
+                "Dev": 0,
+                "Mod": 0,
+            };
+
+            gridApi.forEachNodeAfterFilter(node => {
+                //const type = node.data.type;
+                Object.keys(result).forEach(type => {
+                    if (node.data['Type'].includes(type)) {
+                        result[type]++;
+                    }
+                });
+            });
+
+            result['Sherpa, Emi'] = result.Sherpa + result.Emissary;
+            delete result.Sherpa;
+            delete result.Emissary;
+
+            result['Dev, Mod'] = result.Dev + result.Mod;
+            delete result.Dev;
+            delete result.Mod;
+
+            return result;
+        }
+
+        function addDotToMiles(miles) {
+            // Convert miles to string
+            let milesStr = miles.toString();
+
+            // Insert dots every three characters from the right
+            let result = "";
+            for (let i = milesStr.length - 1, count = 0; i >= 0; i--) {
+                result = milesStr[i] + result;
+                count++;
+                if (count % 3 === 0 && i !== 0) {
+                    result = "." + result;
+                }
+            }
+
+            return result;
+        }
     </script>
 </body>
 
