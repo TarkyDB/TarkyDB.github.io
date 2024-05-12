@@ -95,51 +95,14 @@
 
     <script>
 
-
-        /*
-                let pinnedArray = [
-                    {
-                        "Name (Click to open profile)": "Filtered Players: 1.808.088 = 100%",
-                        "Type": "Standard: 130.000",
-                        "Banned": "0.64%",
-                        "Level": "Avg: 20",
-                        "Weapon": "Most: AK74",
-                        "Last Access": "Played 1 Week: 30%",
-                        "Hours Played": "Avg: 130",
-                    },
-                    {
-                        "Name (Click to open profile)": "Accounts played this wipe: 20%",
-                        "Type": "EOD: 500.000",
-                        "Level": "Med: 20",
-                        "Weapon": "Less: MDR",
-                        "Last Access": "Played 1 Month: 30%",
-                        "Hours Played": "Med: 13",
-                    },
-                    {
-                        "Name (Click to open profile)": "Players captured: 75%",
-                        "Type": "Sherpa/Emi: 300",
-                        "Level": "Min: 10",
-                        "Last Access": "Played 2 Month: 30%",
-                        "Hours Played": "Min: 11",
-                    },
-                    {
-                        "Name (Click to open profile)": "Data from March 2024",
-                        "Type": "Dev, Mod: 140",
-                        "Level": "Max: 70",
-                        "Last Access": "Played More: 30%",
-                        "Hours Played": "Max: 70",
-                    },
-                ];
-        */
-
         let pinnedArray = [
             {
-                "Name (Click to open profile)": "Statistics",
+                "Name (Click to open profile)": "Statistics Wipe 2023-12-27",
                 "Type": "Account Type",
                 "Banned": "Banned",
                 "Level": "Level",
                 "Weapon": "Weapon",
-                "Last Access": "Last Access",
+                "Last Access": "Last Access (Since Wipe)",
                 "Hours Played": "Hours Played",
                 "Sessions": "Sessions",
                 "Survived": "Survived",
@@ -209,7 +172,7 @@
                 pivotHeaderHeight: 30,
                 columnDefs: [
                     //{ field: "#", headerName: '123', headerTooltip: "Number of row in the table" },
-                    { field: "Name (Click to open profile)", headerTooltip: "Name of the player at 18 March of 2024", minWidth: 250, lockPinned: true, pinned: "left", cellClass: 'blue'/*, cellRenderer: nameRenderer*/ },
+                    { field: "Name (Click to open profile)", headerTooltip: "[ID] Name of the player as of March 2024. ID don't change between wipes or name change.", minWidth: 250, lockPinned: true, pinned: "left", cellClass: 'blue'/*, cellRenderer: nameRenderer*/ },
                     //{ field: "Account (Click to open profile)", headerTooltip: "Account number in Tarkov.dev", minWidth: 260, cellClass: 'blue', pinned: "left", lockPinned: true, },
                     { field: "Type", headerTooltip: "Account Type: Standard, EOD, Dev, Mod, Sherpa or Emissary", minWidth: 200 },
                     { field: "Banned", headerTooltip: "If the player is banned = YES", minWidth: 140, cellRenderer: booleanRenderer },
@@ -220,7 +183,7 @@
                     { field: "Sessions", headerTooltip: "Raids played in this wipe", minWidth: 110, valueFormatter: cellRenderer },
                     { field: "Survived", headerTooltip: "Survived raids in this wipe", minWidth: 110, valueFormatter: cellRenderer },
                     { field: "Runthrough", headerTooltip: "Runthrough raids in this wipe", minWidth: 115, valueFormatter: cellRenderer },
-                    { field: "Disconnect", headerTooltip: "Disconnect/Leave raids in this wipe", minWidth: 100, valueFormatter: cellRenderer },
+                    { field: "Disconnects", headerTooltip: "Disconnect/Leave raids in this wipe", minWidth: 100, valueFormatter: cellRenderer },
                     { field: "K/D", headerTooltip: "Kills/Deaths Ratio", minWidth: 90, valueFormatter: cellRenderer },
                     { field: "Kills", headerTooltip: "Enemies killed by the player", minWidth: 100, valueFormatter: cellRenderer },
                     { field: "Killed", headerTooltip: "Number of times that the player has been killed in raid", minWidth: 105, valueFormatter: cellRenderer },
@@ -234,7 +197,6 @@
                     { field: "Zryachiy Achievement", headerTooltip: "Eliminate Zryachiy for the first time while playing as a PMC", filter: 'agDateColumnFilter', valueFormatter: formatDate, minWidth: 200 },
                 ],
                 rowData: [],
-
                 pinnedBottomRowData: pinnedArray,
                 defaultColDef: {
                     flex: 1,
@@ -473,16 +435,21 @@
                 // Filtered players number and percentage
                 pinnedArray[1]["Name (Click to open profile)"] = "Filtered Players: " + addDotToMiles(rowsCount) + " = " + Math.round(100 * rowsCount / totalPlayers) + "%";
 
+
+                
                 // Account types
                 column = 'Type';
+                console.time(column);
                 statistics = calculateAccountTypes();
                 pinnedArray[1][column] = `Standard: ${addDotToMiles(statistics['Standard'])} = ${Math.round(100 * statistics['Standard'] / rowsCount)}%`;
                 pinnedArray[2][column] = `EOD: ${addDotToMiles(statistics['EOD'])} = ${Math.round(100 * statistics['EOD'] / rowsCount)}%`;
                 pinnedArray[3][column] = `Sherpa, Emi: ${addDotToMiles(statistics['Sherpa, Emi'])}`;
                 pinnedArray[4][column] = `Dev, Mod: ${addDotToMiles(statistics['Dev, Mod'])}`;
-
+                console.timeEnd(column);
+                
                 // Banned
                 column = 'Banned';
+                console.time(column);
                 statistics = calculateBanned();
                 if (statistics) {
                     pinnedArray[1][column] = `${addDotToMiles(statistics)} = ${Math.round(100 * statistics / rowsCount)}%`;
@@ -490,138 +457,176 @@
                 else {
                     pinnedArray[1][column] = '';
                 }
+                console.timeEnd(column);
+                
+
+                
 
 
                 // Last Access
                 column = 'Last Access';
-                statistics = calculateAccess();
-                pinnedArray[1][column] = `Average: 48d`;
-                pinnedArray[2][column] = `Median: 30d`;
-                pinnedArray[3][column] = `Played 1 Week: 30%`;
-                pinnedArray[4][column] = `Played 1 Month: 30%`;
-
+                console.time(column);
+                //statistics = calculateAccess();
+                //pinnedArray[1][column] = `Average: ${statistics.avg} days`;
+                //pinnedArray[2][column] = `Played 1 Week: 75%`;
+                //pinnedArray[3][column] = `Played 1 Month: 50%`;
+                //pinnedArray[4][column] = `Played More: 30%`;
+                console.timeEnd(column);
                 
 
+
+                
                 // Weapon
                 column = 'Weapon';
+                console.time(column);
                 statistics = calculateWeapon();
                 pinnedArray[1][column] = `1st: ${statistics.first}`;
                 pinnedArray[2][column] = `2nd: ${statistics.second}`;
                 pinnedArray[3][column] = `3rd: ${statistics.third}`;
                 pinnedArray[4][column] = `Less: ${statistics.less}`;
-
+                console.timeEnd(column);
+                
+                
                 // Level
                 column = 'Level';
+                console.time(column);
                 statistics = calculateMetrics(column);
                 pinnedArray[1][column] = `Avg: ${Math.round(statistics.avg)}`;
-                pinnedArray[2][column] = `Med: ${statistics.med}`;
+                //pinnedArray[2][column] = `Med: ${statistics.med}`;
                 pinnedArray[3][column] = `Min: ${statistics.min}`;
                 pinnedArray[4][column] = `Max: ${statistics.max}`;
-
+                console.timeEnd(column);
+                
                 // Hours Played
                 column = 'Hours Played';
+                console.time(column);
                 statistics = calculateMetrics(column);
                 pinnedArray[1][column] = `Avg: ${Math.round(statistics.avg)}`;
-                pinnedArray[2][column] = `Med: ${statistics.med}`;
+                //pinnedArray[2][column] = `Med: ${statistics.med}`;
                 pinnedArray[3][column] = `Min: ${statistics.min}`;
                 pinnedArray[4][column] = `Max: ${addDotToMiles(statistics.max)}`;
+                console.timeEnd(column);
 
                 // Sessions
                 column = 'Sessions';
+                console.time(column);
                 statistics = calculateMetrics(column);
                 pinnedArray[1][column] = `Avg: ${Math.round(statistics.avg)}`;
-                pinnedArray[2][column] = `Med: ${statistics.med}`;
+                //pinnedArray[2][column] = `Med: ${statistics.med}`;
                 pinnedArray[3][column] = `Min: ${statistics.min}`;
                 pinnedArray[4][column] = `Max: ${addDotToMiles(statistics.max)}`;
+                console.timeEnd(column);
 
                 // Survived
                 column = 'Survived';
+                console.time(column);
                 statistics = calculateMetrics(column);
                 pinnedArray[1][column] = `Avg: ${Math.round(statistics.avg)}`;
-                pinnedArray[2][column] = `Med: ${statistics.med}`;
+                //pinnedArray[2][column] = `Med: ${statistics.med}`;
                 pinnedArray[3][column] = `Min: ${statistics.min}`;
                 pinnedArray[4][column] = `Max: ${addDotToMiles(statistics.max)}`;
+                console.timeEnd(column);
 
                 // Runthrough
                 column = 'Runthrough';
+                console.time(column);
                 statistics = calculateMetrics(column);
                 pinnedArray[1][column] = `Avg: ${Math.round(statistics.avg)}`;
-                pinnedArray[2][column] = `Med: ${statistics.med}`;
+                //pinnedArray[2][column] = `Med: ${statistics.med}`;
                 pinnedArray[3][column] = `Min: ${statistics.min}`;
                 pinnedArray[4][column] = `Max: ${addDotToMiles(statistics.max)}`;
+                console.timeEnd(column);
 
                 // Disconnects
                 column = 'Disconnects';
+                console.time(column);
                 statistics = calculateMetrics(column);
                 pinnedArray[1][column] = `Avg: ${Math.round(statistics.avg)}`;
-                pinnedArray[2][column] = `Med: ${statistics.med}`;
+                //pinnedArray[2][column] = `Med: ${statistics.med}`;
                 pinnedArray[3][column] = `Min: ${statistics.min}`;
                 pinnedArray[4][column] = `Max: ${addDotToMiles(statistics.max)}`;
+                console.timeEnd(column);
 
                 // K/D
                 column = 'K/D';
+                console.time(column);
                 statistics = calculateMetrics(column);
                 pinnedArray[1][column] = `Avg: ${Math.round(statistics.avg)}`;
-                pinnedArray[2][column] = `Med: ${statistics.med}`;
+                //pinnedArray[2][column] = `Med: ${statistics.med}`;
                 pinnedArray[3][column] = `Min: ${statistics.min}`;
                 pinnedArray[4][column] = `Max: ${statistics.max}`;
+                console.timeEnd(column);
 
                 // Kills
                 column = 'Kills';
+                console.time(column);
                 statistics = calculateMetrics(column);
                 pinnedArray[1][column] = `Avg: ${Math.round(statistics.avg)}`;
-                pinnedArray[2][column] = `Med: ${statistics.med}`;
+                //pinnedArray[2][column] = `Med: ${statistics.med}`;
                 pinnedArray[3][column] = `Min: ${statistics.min}`;
                 pinnedArray[4][column] = `Max: ${addDotToMiles(statistics.max)}`;
+                console.timeEnd(column);
 
                 // Killed
                 column = 'Killed';
+                console.time(column);
                 statistics = calculateMetrics(column);
                 pinnedArray[1][column] = `Avg: ${Math.round(statistics.avg)}`;
-                pinnedArray[2][column] = `Med: ${statistics.med}`;
+                //pinnedArray[2][column] = `Med: ${statistics.med}`;
                 pinnedArray[3][column] = `Min: ${statistics.min}`;
                 pinnedArray[4][column] = `Max: ${addDotToMiles(statistics.max)}`;
+                console.timeEnd(column);
 
                 // Deaths
                 column = 'Deaths';
+                console.time(column);
                 statistics = calculateMetrics(column);
                 pinnedArray[1][column] = `Avg: ${Math.round(statistics.avg)}`;
-                pinnedArray[2][column] = `Med: ${statistics.med}`;
+                //pinnedArray[2][column] = `Med: ${statistics.med}`;
                 pinnedArray[3][column] = `Min: ${statistics.min}`;
                 pinnedArray[4][column] = `Max: ${addDotToMiles(statistics.max)}`;
+                console.timeEnd(column);
 
                 // Attention
                 column = 'Attention';
+                console.time(column);
                 statistics = calculateMetrics(column);
                 pinnedArray[1][column] = `Avg: ${Math.round(statistics.avg)}`;
-                pinnedArray[2][column] = `Med: ${statistics.med}`;
+                //pinnedArray[2][column] = `Med: ${statistics.med}`;
                 pinnedArray[3][column] = `Min: ${statistics.min}`;
                 pinnedArray[4][column] = `Max: ${statistics.max}`;
+                console.timeEnd(column);
 
                 // Perception
                 column = 'Perception';
+                console.time(column);
                 statistics = calculateMetrics(column);
                 pinnedArray[1][column] = `Avg: ${Math.round(statistics.avg)}`;
-                pinnedArray[2][column] = `Med: ${statistics.med}`;
+                //pinnedArray[2][column] = `Med: ${statistics.med}`;
                 pinnedArray[3][column] = `Min: ${statistics.min}`;
                 pinnedArray[4][column] = `Max: ${statistics.max}`;
+                console.timeEnd(column);
 
 
                 // Strength
                 column = 'Strength';
+                console.time(column);
                 statistics = calculateMetrics(column);
                 pinnedArray[1][column] = `Avg: ${Math.round(statistics.avg)}`;
-                pinnedArray[2][column] = `Med: ${statistics.med}`;
+                //pinnedArray[2][column] = `Med: ${statistics.med}`;
                 pinnedArray[3][column] = `Min: ${statistics.min}`;
                 pinnedArray[4][column] = `Max: ${statistics.max}`;
+                console.timeEnd(column);
 
                 // Endurance
                 column = 'Endurance';
+                console.time(column);
                 statistics = calculateMetrics(column);
                 pinnedArray[1][column] = `Avg: ${Math.round(statistics.avg)}`;
-                pinnedArray[2][column] = `Med: ${statistics.med}`;
+                //pinnedArray[2][column] = `Med: ${statistics.med}`;
                 pinnedArray[3][column] = `Min: ${statistics.min}`;
                 pinnedArray[4][column] = `Max: ${statistics.max}`;
+                console.timeEnd(column);
 
                 // Save first statistics to restore without re-calculation
                 if (!firstPinnedData) {
@@ -642,11 +647,11 @@
             let max = -Infinity;
 
             gridApi.forEachNodeAfterFilter(node => {
-                if(!node.data['Last Access']) return;
-                const value = differenceInDays(startWipe ,node.data['Last Access']);
+                if (!node.data['Last Access']) return;
+                const value = differenceInDays(startWipe, node.data['Last Access']);
                 daysPlayed.push(value);
-                if(value < min) min = value;
-                if(value > max) max = value;
+                if (value < min) min = value;
+                if (value > max) max = value;
                 total += value;
             });
 
@@ -747,7 +752,7 @@
 
             return {
                 avg: total / rowsCount,
-                med: calculateMedian(med),
+                //med: calculateMedian(med),
                 min: min,
                 max: max,
             };
