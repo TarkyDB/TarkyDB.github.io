@@ -4,7 +4,7 @@
 <head>
     <meta charset="UTF-8">
     <title>Tarkov Player Database</title>
-    <script src="https://cdn.jsdelivr.net/npm/ag-grid-community@31.3.1/dist/ag-grid-community.min.js"></script>
+    <script src="ag-grid-community.min.js"></script>
 
     <style>
         html,
@@ -103,16 +103,20 @@
 
         var gridApi;
 
+
+        function cellRenderer(params) {
+            return params.value;
+        }
+
         function buildTable() {
             console.timeEnd('Total');
             let rowNumber = 1;
-
-
 
             var gridOptions = {
                 //pagination: true,
                 //paginationPageSize: 1000,
                 suppressMenuHide: true,
+                suppressDragLeaveHidesColumns: true,
                 enableCellTextSelection: true,
                 tooltipShowDelay: 0,
                 valueCache: true,
@@ -121,72 +125,60 @@
                 pivotHeaderHeight: 30,
                 columnDefs: [
                     //{ field: "#", headerName: '123', headerTooltip: "Number of row in the table" },
-                    { field: "Account (Click to open profile)", headerTooltip: "Account number in Tarkov.dev", minWidth: 260, cellClass: 'blue', pinned: "left", lockPinned: true, },
-                    { field: "Name", headerTooltip: "Name of the player at 18 March of 2024", minWidth: 160 },
+                    { field: "Name (Click to open profile)", headerTooltip: "Name of the player at 18 March of 2024", minWidth: 250, lockPinned: true, pinned: "left", cellClass: 'blue'/*, cellRenderer: nameRenderer*/ },
+                    //{ field: "Account (Click to open profile)", headerTooltip: "Account number in Tarkov.dev", minWidth: 260, cellClass: 'blue', pinned: "left", lockPinned: true, },
                     { field: "Type", headerTooltip: "Account Type: Standard, EOD, Dev, Mod, Sherpa or Emissary" },
                     { field: "Banned", headerTooltip: "If the player is banned = YES", minWidth: 110 },
-                    { field: "Level", headerTooltip: "Player level at 18 March of 2024", minWidth: 100 },
+                    { field: "Level", headerTooltip: "Player level at 18 March of 2024", minWidth: 100, valueFormatter: cellRenderer },
                     { field: "Weapon", headerTooltip: "Most used weapon", minWidth: 125 },
-                    { field: "Last Access", headerTooltip: "Last time a skill gained exp", minWidth: 135, filter: 'agDateColumnFilter', cellRenderer: formatDate },
-                    { field: "Days played", headerTooltip: "Days played since account creation", minWidth: 135 },
-                    { field: "Sessions", headerTooltip: "Raids played in this wipe", minWidth: 110 },
-                    { field: "Survived", headerTooltip: "Survived raids in this wipe", minWidth: 110 },
-                    { field: "Runthrough", headerTooltip: "Runthrough raids in this wipe", minWidth: 115 },
-                    { field: "Left", headerTooltip: "Disconnect/Leave raids in this wipe", minWidth: 100 },
-                    { field: "K/D", headerTooltip: "Kills/Deaths Ratio", minWidth: 90 },
-                    { field: "Kills", headerTooltip: "Enemies killed by the player", minWidth: 100 },
-                    { field: "Killed", headerTooltip: "Number of times that the player has been killed in raid", minWidth: 105 },
-                    { field: "Deaths", headerTooltip: "Number of times that the player has died in raid (falls/hunger...)", minWidth: 105 },
-                    { field: "Attention", headerTooltip: "Skill Level", minWidth: 125 },
-                    { field: "Perception", headerTooltip: "Skill Level", minWidth: 125 },
-                    { field: "Strength", headerTooltip: "Skill Level", minWidth: 125 },
-                    { field: "Endurance", headerTooltip: "Skill Level", minWidth: 125 },
-                    { field: "Kill 7 Achievement", headerTooltip: "Eliminate 7 PMC operatives in a single raid while playing as a PMC", filter: 'agDateColumnFilter', cellRenderer: formatDate, minWidth: 200 },
-                    { field: "Lightkeeper Achievement", headerTooltip: "Meet Lightkeeper for the first time while playing as a PMC", filter: 'agDateColumnFilter', cellRenderer: formatDate, minWidth: 200 },
-                    { field: "Zryachiy Achievement", headerTooltip: "Eliminate Zryachiy for the first time while playing as a PMC", filter: 'agDateColumnFilter', cellRenderer: formatDate, minWidth: 200 },
+                    { field: "Last Access", headerTooltip: "Last time a skill gained exp", minWidth: 135, filter: 'agDateColumnFilter', valueFormatter: formatDate },
+                    { field: "Hours Played", headerTooltip: "Hours played since account creation", minWidth: 135, valueFormatter: cellRenderer },
+                    { field: "Sessions", headerTooltip: "Raids played in this wipe", minWidth: 110, valueFormatter: cellRenderer },
+                    { field: "Survived", headerTooltip: "Survived raids in this wipe", minWidth: 110, valueFormatter: cellRenderer },
+                    { field: "Runthrough", headerTooltip: "Runthrough raids in this wipe", minWidth: 115, valueFormatter: cellRenderer },
+                    { field: "Disconnect", headerTooltip: "Disconnect/Leave raids in this wipe", minWidth: 100, valueFormatter: cellRenderer },
+                    { field: "K/D", headerTooltip: "Kills/Deaths Ratio", minWidth: 90, valueFormatter: cellRenderer },
+                    { field: "Kills", headerTooltip: "Enemies killed by the player", minWidth: 100, valueFormatter: cellRenderer },
+                    { field: "Killed", headerTooltip: "Number of times that the player has been killed in raid", minWidth: 105, valueFormatter: cellRenderer },
+                    { field: "Deaths", headerTooltip: "Number of times that the player has died in raid (falls/hunger...)", minWidth: 105, valueFormatter: cellRenderer },
+                    { field: "Attention", headerTooltip: "Skill Level", minWidth: 125, valueFormatter: cellRenderer },
+                    { field: "Perception", headerTooltip: "Skill Level", minWidth: 125, valueFormatter: cellRenderer },
+                    { field: "Strength", headerTooltip: "Skill Level", minWidth: 125, valueFormatter: cellRenderer },
+                    { field: "Endurance", headerTooltip: "Skill Level", minWidth: 125, valueFormatter: cellRenderer },
+                    { field: "Kill 7 Achievement", headerTooltip: "Eliminate 7 PMC operatives in a single raid while playing as a PMC", filter: 'agDateColumnFilter', valueFormatter: formatDate, minWidth: 200 },
+                    { field: "Lightkeeper Achievement", headerTooltip: "Meet Lightkeeper for the first time while playing as a PMC", filter: 'agDateColumnFilter', valueFormatter: formatDate, minWidth: 200 },
+                    { field: "Zryachiy Achievement", headerTooltip: "Eliminate Zryachiy for the first time while playing as a PMC", filter: 'agDateColumnFilter', valueFormatter: formatDate, minWidth: 200 },
                 ],
                 rowData: [],
 
                 pinnedBottomRowData: [
                     {
-                        "Account (Click to open profile)": "Statistics",
+                        "Name (Click to open profile)": "Filtered Players: 1.808.088 = 100%",
                         "Type": "Standard: 130.000",
                         "Banned": "0.64%",
-                        //"Level": "Avg: 20",
-                        "Weapon": "MDR",
-                        //"Days Played": "Avg: 130",
+                        "Level": "Avg: 20",
+                        "Weapon": "Most: AK74",
+                        "Hours Played": "Avg: 130",
                     },
                     {
-                        "Account (Click to open profile)": "TOTAL: 1808293",
-                        "Type": "Standard: 130.000",
-                        "Banned": "0.64%",
-                        //"Level": "Avg: 20",
-                        "Weapon": "MDR",
-                        //"Days Played": "Avg: 130",
-                    },
-                    {
-                        "Account (Click to open profile)": "Average",
+                        "Name (Click to open profile)": "Accounts played this wipe: 20%",
                         "Type": "EOD: 500.000",
-                        //"Banned": "0.64%",
-                        "Level": 30,
-                        //"Weapon": "MDR",
-                        "Days played": 130,
+                        "Level": "Med: 20",
+                        "Weapon": "Less: MDR",
+                        "Hours Played": "Med: 13",
                     },
                     {
-                        "Account (Click to open profile)": "Minimum",
+                        "Name (Click to open profile)": "Players captured: 75%",
                         "Type": "Sherpa/Emi: 300",
-                        //"Banned": "0.64%",
-                        "Level": 0,
-                        //"Weapon": "MDR",
-                        "Days played": 0,
+                        "Level": "Min: 10",
+                        "Hours Played": "Min: 11",
                     },
                     {
-                        "Account (Click to open profile)": "Maximum",
+                        "Name (Click to open profile)": "Data from March 2024",
                         "Type": "Dev, Mod: 140",
-                        //"Banned": "0.64%",
-                        "Level": 71,
-                        //"Weapon": "MDR",
-                        "Days played": 400,
+                        "Level": "Max: 70",
+                        
+                        "Hours Played": "Max: 70",
                     },
                 ],
                 defaultColDef: {
@@ -218,12 +210,30 @@
                 const cellValue = gridApi.getValue(focusedCell.column, row);
                 //console.log(row);
                 if (focusedCell.column.instanceId === 0) {
-                    window.open('https://tarkov.dev/player/' + cellValue, '_blank');
+                    const id = extractNumbersInsideBrackets(cellValue);
+                    window.open('https://tarkov.dev/player/' + id, '_blank');
                     //window.open(cellValue, '_blank');
                 }
             });
 
 
+        }
+
+        function extractNumbersInsideBrackets(str) {
+            // Regular expression to match numbers inside square brackets
+            let regex = /\[(\d+)\]/g;
+
+            // Array to store the extracted numbers
+            let numbers = [];
+
+            // Match the regular expression in the string
+            let match;
+            while ((match = regex.exec(str)) !== null) {
+                // Add the matched number to the array
+                numbers.push(parseInt(match[1]));
+            }
+
+            return numbers;
         }
 
         function formatDate(data) {
@@ -255,95 +265,115 @@
 
     </script>
 
-<script src="db-1.js"></script>
-<script>loadingOverlay.innerHTML = `Loading data ${++fileNumber}/32`;</script>
-<script src="db-2.js"></script>
-<script>loadingOverlay.innerHTML = `Loading data ${++fileNumber}/32`;</script>
-<script src="db-3.js"></script>
-<script>loadingOverlay.innerHTML = `Loading data ${++fileNumber}/32`;</script>
-<script src="db-4.js"></script>
-<script>loadingOverlay.innerHTML = `Loading data ${++fileNumber}/32`;</script>
-<script src="db-5.js"></script>
-<script>loadingOverlay.innerHTML = `Loading data ${++fileNumber}/32`;</script>
-<script src="db-6.js"></script>
-<script>loadingOverlay.innerHTML = `Loading data ${++fileNumber}/32`;</script>
-<script src="db-7.js"></script>
-<script>loadingOverlay.innerHTML = `Loading data ${++fileNumber}/32`;</script>
-<script src="db-8.js"></script>
-<script>loadingOverlay.innerHTML = `Loading data ${++fileNumber}/32`;</script>
-<script src="db-9.js"></script>
-<script>loadingOverlay.innerHTML = `Loading data ${++fileNumber}/32`;</script>
-<script src="db-10.js"></script>
-<script>loadingOverlay.innerHTML = `Loading data ${++fileNumber}/32`;</script>
-<script src="db-11.js"></script>
-<script>loadingOverlay.innerHTML = `Loading data ${++fileNumber}/32`;</script>
-<script src="db-12.js"></script>
-<script>loadingOverlay.innerHTML = `Loading data ${++fileNumber}/32`;</script>
-<script src="db-13.js"></script>
-<script>loadingOverlay.innerHTML = `Loading data ${++fileNumber}/32`;</script>
-<script src="db-14.js"></script>
-<script>loadingOverlay.innerHTML = `Loading data ${++fileNumber}/32`;</script>
-<script src="db-15.js"></script>
-<script>loadingOverlay.innerHTML = `Loading data ${++fileNumber}/32`;</script>
-<script src="db-16.js"></script>
-<script>loadingOverlay.innerHTML = `Loading data ${++fileNumber}/32`;</script>
-<script src="db-17.js"></script>
-<script>loadingOverlay.innerHTML = `Loading data ${++fileNumber}/32`;</script>
-<script src="db-18.js"></script>
-<script>loadingOverlay.innerHTML = `Loading data ${++fileNumber}/32`;</script>
-<script src="db-19.js"></script>
-<script>loadingOverlay.innerHTML = `Loading data ${++fileNumber}/32`;</script>
-<script src="db-20.js"></script>
-<script>loadingOverlay.innerHTML = `Loading data ${++fileNumber}/32`;</script>
-<script src="db-21.js"></script>
-<script>loadingOverlay.innerHTML = `Loading data ${++fileNumber}/32`;</script>
-<script src="db-22.js"></script>
-<script>loadingOverlay.innerHTML = `Loading data ${++fileNumber}/32`;</script>
-<script src="db-23.js"></script>
-<script>loadingOverlay.innerHTML = `Loading data ${++fileNumber}/32`;</script>
-<script src="db-24.js"></script>
-<script>loadingOverlay.innerHTML = `Loading data ${++fileNumber}/32`;</script>
-<script src="db-25.js"></script>
-<script>loadingOverlay.innerHTML = `Loading data ${++fileNumber}/32`;</script>
-<script src="db-26.js"></script>
-<script>loadingOverlay.innerHTML = `Loading data ${++fileNumber}/32`;</script>
-<script src="db-27.js"></script>
-<script>loadingOverlay.innerHTML = `Loading data ${++fileNumber}/32`;</script>
-<script src="db-28.js"></script>
-<script>loadingOverlay.innerHTML = `Loading data ${++fileNumber}/32`;</script>
-<script src="db-29.js"></script>
-<script>loadingOverlay.innerHTML = `Loading data ${++fileNumber}/32`;</script>
-<script src="db-30.js"></script>
-<script>loadingOverlay.innerHTML = `Loading data ${++fileNumber}/32`;</script>
-<script src="db-31.js"></script>
-<script>loadingOverlay.innerHTML = `Loading data ${++fileNumber}/32`;</script>
-<script src="db-32.js"></script>
-<script>loadingOverlay.innerHTML = `Loading data completed`;</script>
+    <script src="db-1.js"></script>
+    <script>loadingOverlay.innerHTML = `Loading data ${++fileNumber}/32`;</script>
+    <script src="db-2.js"></script>
+    <script>loadingOverlay.innerHTML = `Loading data ${++fileNumber}/32`;</script>
+    <script src="db-3.js"></script>
+    <script>loadingOverlay.innerHTML = `Loading data ${++fileNumber}/32`;</script>
+    <script src="db-4.js"></script>
+    <script>loadingOverlay.innerHTML = `Loading data ${++fileNumber}/32`;</script>
+    <script src="db-5.js"></script>
+    <script>loadingOverlay.innerHTML = `Loading data ${++fileNumber}/32`;</script>
+    <script src="db-6.js"></script>
+    <script>loadingOverlay.innerHTML = `Loading data ${++fileNumber}/32`;</script>
+    <script src="db-7.js"></script>
+    <script>loadingOverlay.innerHTML = `Loading data ${++fileNumber}/32`;</script>
+    <script src="db-8.js"></script>
+    <script>loadingOverlay.innerHTML = `Loading data ${++fileNumber}/32`;</script>
+    <script src="db-9.js"></script>
+    <script>loadingOverlay.innerHTML = `Loading data ${++fileNumber}/32`;</script>
+    <script src="db-10.js"></script>
+    <script>loadingOverlay.innerHTML = `Loading data ${++fileNumber}/32`;</script>
+    <script src="db-11.js"></script>
+    <script>loadingOverlay.innerHTML = `Loading data ${++fileNumber}/32`;</script>
+    <script src="db-12.js"></script>
+    <script>loadingOverlay.innerHTML = `Loading data ${++fileNumber}/32`;</script>
+    <script src="db-13.js"></script>
+    <script>loadingOverlay.innerHTML = `Loading data ${++fileNumber}/32`;</script>
+    <script src="db-14.js"></script>
+    <script>loadingOverlay.innerHTML = `Loading data ${++fileNumber}/32`;</script>
+    <script src="db-15.js"></script>
+    <script>loadingOverlay.innerHTML = `Loading data ${++fileNumber}/32`;</script>
+    <script src="db-16.js"></script>
+    <script>loadingOverlay.innerHTML = `Loading data ${++fileNumber}/32`;</script>
+    <script src="db-17.js"></script>
+    <script>loadingOverlay.innerHTML = `Loading data ${++fileNumber}/32`;</script>
+    <script src="db-18.js"></script>
+    <script>loadingOverlay.innerHTML = `Loading data ${++fileNumber}/32`;</script>
+    <script src="db-19.js"></script>
+    <script>loadingOverlay.innerHTML = `Loading data ${++fileNumber}/32`;</script>
+    <script src="db-20.js"></script>
+    <script>loadingOverlay.innerHTML = `Loading data ${++fileNumber}/32`;</script>
+    <script src="db-21.js"></script>
+    <script>loadingOverlay.innerHTML = `Loading data ${++fileNumber}/32`;</script>
+    <script src="db-22.js"></script>
+    <script>loadingOverlay.innerHTML = `Loading data ${++fileNumber}/32`;</script>
+    <script src="db-23.js"></script>
+    <script>loadingOverlay.innerHTML = `Loading data ${++fileNumber}/32`;</script>
+    <script src="db-24.js"></script>
+    <script>loadingOverlay.innerHTML = `Loading data ${++fileNumber}/32`;</script>
+    <script src="db-25.js"></script>
+    <script>loadingOverlay.innerHTML = `Loading data ${++fileNumber}/32`;</script>
+    <script src="db-26.js"></script>
+    <script>loadingOverlay.innerHTML = `Loading data ${++fileNumber}/32`;</script>
+    <script src="db-27.js"></script>
+    <script>loadingOverlay.innerHTML = `Loading data ${++fileNumber}/32`;</script>
+    <script src="db-28.js"></script>
+    <script>loadingOverlay.innerHTML = `Loading data ${++fileNumber}/32`;</script>
+    <script src="db-29.js"></script>
+    <script>loadingOverlay.innerHTML = `Loading data ${++fileNumber}/32`;</script>
+    <script src="db-30.js"></script>
+    <script>loadingOverlay.innerHTML = `Loading data ${++fileNumber}/32`;</script>
+    <script src="db-31.js"></script>
+    <script>loadingOverlay.innerHTML = `Loading data ${++fileNumber}/32`;</script>
+    <script src="db-32.js"></script>
+    <script>loadingOverlay.innerHTML = `Loading data completed`;</script>
 
     <script>
+
+        function addLeadingZeros(number) {
+            // Convert the number to a string
+            let numberString = number.toString();
+
+            // Calculate the number of zeros to add
+            let zerosToAdd = 8 - numberString.length; // 7 is the length of 2 million in digits
+
+            // Add the leading zeros
+            for (let i = 0; i < zerosToAdd; i++) {
+                numberString = '0' + numberString;
+            }
+
+            return numberString;
+        }
+
         const rows = [];
-        for(let part of db){
+
+        for (let part of db) {
             rows.push(...part);
         }
+
+        rows.sort((a, b) => a[0] - b[0]);
+
         db = rows.map(function (row) {
             return {
                 //"#": rowNumber++,
-                "Account (Click to open profile)": row[0],
-                "Name": row[1] ?? '',
+                //"Account (Click to open profile)": row[0],
+                "Name (Click to open profile)": `[${addLeadingZeros(row[0])}] ` + row[1],
                 "Type": row[2] ?? '',
                 "Banned": row[3] ?? '',
                 "Level": row[4] ?? '',
                 "Weapon": row[5] ?? '',
                 "Last Access": !isNaN(parseDate(row[6])) ? parseDate(row[6]) : null,
-                "Days played": row[7] ?? '',
+                "Hours Played": row[7] * 24 ?? '',
                 "Sessions": row[8] ?? '',
                 "Survived": row[9] ?? '',
                 "Runthrough": row[10] ?? '',
-                "Left": row[11] ?? '',
+                "Disconnect": row[11] ?? '',
                 "K/D": row[12] ?? '',
                 "Kills": row[13] ?? '',
                 "Killed": row[14] ?? '',
-                "Deaths": row[15] ?? '',
+                "Deaths": row[15] - row[14] ?? '',
                 "Attention": row[16] ?? '',
                 "Perception": row[17] ?? '',
                 "Strength": row[18] ?? '',
